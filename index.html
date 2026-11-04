@@ -70,7 +70,11 @@
     font: 500 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase;
     background: none; border: 0; color: var(--rec); cursor: pointer; padding: 6px 0;
   }
-  .play-all:hover { text-decoration: underline; }
+  .play-all:hover, .sound:hover { text-decoration: underline; }
+  .controls { display: flex; gap: 18px; align-items: baseline; }
+  .sound { font: 500 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 6px 0; }
+  .sound[aria-pressed="false"] { text-decoration: line-through; }
+  .sound:focus-visible { outline: 2px solid var(--rec); outline-offset: 3px; }
   .month {
     padding: 34px 0 8px;
     font: italic 400 26px/1 var(--serif); color: var(--muted);
@@ -175,7 +179,7 @@
   </header>
 
   <main>
-    <div class="list-head"><span>All memos · 9</span><button class="play-all" type="button">Play all ▸</button></div>
+    <div class="list-head"><span>All memos · 9</span><span class="controls"><button class="sound" type="button" aria-pressed="true" hidden>Sound on</button><button class="play-all" type="button">Play all ▸</button></span></div>
 
     <!-- Memos are rendered from MEMOS below; this noscript keeps every word readable without JS. -->
     <div id="memos"></div>
@@ -287,14 +291,16 @@ const cards = MEMOS.map((m, i) => {
 
   const tr = el('div', 'transcript');
   tr.id = tid;
-  const words = [];
+  const words = [], lines = [];
   [['The problem', m.problem], ['What I did', m.did], ['What happened', m.result]].forEach(([label, text]) => {
     const line = el('div', 't-line');
     line.append(el('span', 't-label', label));
     const p = el('p', 't-text');
-    text.split(' ').forEach((w, k, arr) => { const s = el('span', 'w', w); p.append(s); if (k < arr.length - 1) p.append(' '); words.push(s); });
+    const lw = [];
+    text.split(' ').forEach((w, k, arr) => { const s = el('span', 'w', w); p.append(s); if (k < arr.length - 1) p.append(' '); words.push(s); lw.push(s); });
     line.append(p);
     tr.append(line);
+    lines.push({ label, text, words: lw });
   });
   const links = el('div', 'links');
   m.links.forEach(([label, href]) => { const a = el('a', null, label + ' ↗'); a.href = href; a.target = '_blank'; a.rel = 'noopener'; links.append(a); });
@@ -302,13 +308,43 @@ const cards = MEMOS.map((m, i) => {
 
   card.append(top, wave, tr);
   root.append(card);
-  return { card, btn, barEls, words };
+  return { card, btn, barEls, words, lines };
 });
 
-let active = null, timer = null, queue = [];
+let active = null, timer = null, queue = [], run = 0;
+
+// Read aloud with the device's own voice (free, no audio files). Indian English first.
+const synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
+let voice = null, soundOn = true;
+function pickVoice() {
+  const en = synth.getVoices().filter(v => /^en([-_]|$)/i.test(v.lang));
+  voice = ['IN', 'GB', 'US'].map(r => en.find(v => new RegExp('^en[-_]' + r, 'i').test(v.lang))).find(Boolean) || en[0] || null;
+  soundBtn.hidden = !voice;
+}
+const soundBtn = document.querySelector('.sound');
+if (synth) { pickVoice(); synth.onvoiceschanged = pickVoice; }
+soundBtn.addEventListener('click', () => {
+  soundOn = !soundOn;
+  soundBtn.textContent = soundOn ? 'Sound on' : 'Sound off';
+  soundBtn.setAttribute('aria-pressed', String(soundOn));
+  if (!soundOn && synth) synth.cancel();
+});
+
+// Spoken form only: the transcript on screen stays exactly as written.
+const SAY = [[/₹3\.16 Cr/g, '3.16 crore rupees'], [/(\d)\+/g, '$1 plus'], [/\$0/g, 'zero dollars'], [/ \/ /g, ', '],
+  [/\bBOQs\b/g, 'B O Qs'], [/\bBOQ\b/g, 'B O Q'], [/\bPRD\b/g, 'P R D'], [/\bQA\b/g, 'Q A'], [/\bCRMs\b/g, 'C R Ms'], [/\bCRM\b/g, 'C R M']];
+const spoken = t => SAY.reduce((s, [re, to]) => s.replace(re, to), t);
+
+function light(c) {
+  const said = c.words.filter(w => w.classList.contains('said')).length;
+  const lit = Math.round((said / c.words.length) * c.barEls.length);
+  c.barEls.forEach((b, j) => b.classList.toggle('on', j < lit));
+}
 
 function stop(finish) {
+  run++;
   clearInterval(timer); timer = null;
+  if (synth) synth.cancel();
   if (!active) return;
   active.card.classList.remove('is-playing');
   active.btn.setAttribute('aria-label', 'Play memo again');
@@ -316,24 +352,55 @@ function stop(finish) {
   active = null;
 }
 
+// Silent playback: words appear at a steady pace.
+function playSilent(c, id) {
+  let k = 0;
+  timer = setInterval(() => {
+    if (id !== run) return;
+    if (k < c.words.length) c.words[k].classList.add('said');
+    k++; light(c);
+    if (k >= c.words.length) { stop(true); next(); }
+  }, 140);
+}
+
+// Spoken playback: one utterance per line. Word boundaries drive the highlight
+// where the engine reports them; otherwise an estimate keeps pace, and a
+// watchdog moves on if an engine never reports the end of a line.
+function playSpoken(c, id) {
+  const lines = c.lines.slice();
+  const nextLine = () => {
+    if (id !== run) return;
+    const L = lines.shift();
+    if (!L) { stop(true); next(); return; }
+    const head = L.label + '. ', body = spoken(L.text), say = head + body;
+    const u = new SpeechSynthesisUtterance(say);
+    u.voice = voice; u.lang = voice.lang; u.rate = 1;
+    const mark = frac => { const n = Math.round(Math.min(1, Math.max(0, frac)) * L.words.length); L.words.forEach((w, j) => j < n && w.classList.add('said')); light(c); };
+    let gotBoundary = false, done = false, t0 = 0;
+    const est = setInterval(() => { if (!gotBoundary && t0) mark((Date.now() - t0 - 700) / (body.length * 62)); }, 120);
+    const finish = () => { if (done) return; done = true; clearInterval(est); clearTimeout(watch); if (id !== run) return; mark(1); nextLine(); };
+    const watch = setTimeout(finish, 3000 + say.length * 110);
+    u.onstart = () => { t0 = Date.now(); };
+    setTimeout(() => { if (!t0) t0 = Date.now(); }, 1500);
+    u.onboundary = e => { if (e.name && e.name !== 'word') return; gotBoundary = true; mark((e.charIndex - head.length) / body.length); };
+    u.onend = finish; u.onerror = finish;
+    synth.speak(u);
+  };
+  nextLine();
+}
+
 function play(c) {
   stop(true);
+  const id = run;
   active = c;
   c.card.classList.add('is-open', 'is-playing');
   c.btn.setAttribute('aria-expanded', 'true');
   c.btn.setAttribute('aria-label', 'Stop memo');
   c.words.forEach(w => w.classList.remove('said'));
   c.barEls.forEach(b => b.classList.remove('on'));
+  if (soundOn && synth && voice) return playSpoken(c, id);
   if (reduced) { stop(true); return next(); }
-  const total = c.words.length;
-  let k = 0;
-  timer = setInterval(() => {
-    if (k < total) c.words[k].classList.add('said');
-    k++;
-    const lit = Math.round((k / total) * c.barEls.length);
-    for (let j = 0; j < lit && j < c.barEls.length; j++) c.barEls[j].classList.add('on');
-    if (k >= total) { stop(true); next(); }
-  }, 140);
+  playSilent(c, id);
 }
 
 function next() {
