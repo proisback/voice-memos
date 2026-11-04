@@ -119,6 +119,14 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .tl.result p { font-weight: 500; }
 .is-tracking .tl .w { opacity: .3; transition: opacity .2s; }
 .is-tracking .tl .w.said { opacity: 1; }
+.stayed { margin-top: 26px; padding: 4px 0 4px 20px; border-left: 2px solid var(--rec); }
+.stayed .mono { color: var(--rec-ink); font-size: 11px; display: block; margin-bottom: 8px; }
+.stayed .mono em { font-style: normal; color: var(--muted); letter-spacing: .08em; }
+.stayed .mono em::before { content: ' · '; }
+.is-tracking .stayed.tracked .w { opacity: .3; transition: opacity .2s; }
+.is-tracking .stayed.tracked .w.said { opacity: 1; }
+.stayed p { font: italic 400 22px/1.4 var(--serif); color: var(--ink-2); max-width: 32em; }
+@media (max-width: 640px) { .stayed p { font-size: 20px; } .stayed .mono em { display: block; margin-top: 4px; } .stayed .mono em::before { content: none; } }
 .links { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 8px; }
 .links a { font: 500 13px/1 var(--mono); text-decoration: none; padding: 12px 16px; border-radius: 99px; border: 1px solid var(--ink); transition: background .2s, color .2s; }
 .links a:hover { background: var(--ink); color: var(--paper); }
@@ -280,7 +288,7 @@ footer { padding: 24px 0 120px; color: var(--muted); font: 400 12.5px/1.7 var(--
       <button class="btn primary" type="button" data-playall><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>Listen to my year</button>
       <a class="btn" href="#memos">Explore the projects</a>
     </div>
-    <p class="disclose">Narrated in my cloned voice, generated with Speechify. Nine memos, about 4.5 minutes.</p>
+    <p class="disclose">Narrated in my cloned voice, generated with Speechify. Nine memos, about 7.5 minutes.</p>
     <div class="hero-wave" aria-hidden="true"></div>
   </section>
 
@@ -390,61 +398,71 @@ const MEMOS = [
     problem: "During the 6 to 10 PM rush, store managers can't see their pickers.",
     did: 'Co-authored the PRD as part of a four-person PM squad. We combined 392 reviews, 11 first-person accounts, and a store-manager interview to understand the operational bottlenecks.',
     result: 'Identified an estimated ₹3.16 Cr in annual margin loss per store, and proposed a one-tap intervention to address the problem.',
+    learned: "The data already existed. The franchise owner could see live picker metrics; the manager on the floor couldn't. The useful question wasn't what to build, but who needed the signal and when it could still change the outcome.",
     visual: { big: '₹3.16 Cr', lbl: 'estimated annual margin loss per store' },
     links: [['Case study', CS + 'work/storeops/'], ['Prototype', 'https://blinkit-alert-buddy.lovable.app']] },
   { month: 'Mar', name: 'Signal', status: 'Prototype', kind: 'Intelligence layer for founder CRM · Group project',
     problem: "Most CRMs are designed around sales teams. Early-stage founders often lose opportunities because they forget to follow up, or don't know which conversation matters most.",
     did: 'Co-authored the PRD after six founder interviews and research across 80+ sources on CRM adoption.',
     result: "Designed a prototype that brings a founder's conversations together and surfaces the 3 to 5 deals worth acting on each day.",
+    learned: "One founder had four years of complete pipeline visibility and still lost deals. That interview challenged our hypothesis. Founders didn't need to see more; they needed help deciding which conversation deserved attention today.",
     visual: { big: '3 to 5', lbl: 'deals worth acting on, surfaced each day' },
     links: [['Case study', CS + 'work/signal/'], ['Prototype', 'https://signalaicrm.lovable.app']] },
   { month: 'Mar', name: 'PMPathfinder', status: 'Live', kind: 'Career navigation for aspiring PMs · Solo build',
     problem: 'Aspiring product managers struggle to answer one question: "Am I ready for this role?" 84% in our research received no feedback or only vague feedback.',
     did: 'Ran a 38-person survey and six interviews, then built a three-stage AI-scored platform to make readiness more concrete.',
     result: 'Shipped all seven Must-haves. Users can compare themselves against a real job description and get a Ready / Almost / Not Yet assessment.',
+    learned: "The people I researched lacked a clear readiness signal, not necessarily the skills themselves. A score like 7.3 wouldn't tell them what to do. A Ready, Almost or Not Yet assessment against a real job description gives them a clearer next step.",
     visual: { big: '84%', lbl: 'received no feedback, or only vague feedback' },
     links: [['Case study', CS + 'work/pmpathfinder/'], ['Live site', 'https://pmpathfinder-psi.vercel.app/']] },
   { month: 'Mar', name: 'Bhojan', status: 'Live', kind: 'Weekly meal planner for Indian families · Solo build',
     problem: '"Aaj kya banayein?" sounds like a small question. In a joint family of six, it can mean 1,095 meal decisions a year.',
     did: 'Built a suggestion-first meal planner. One user interview changed the direction: instead of making people plan everything, help them decide what to cook next.',
     result: 'Shipped in four days, on $0 infrastructure, with no prior coding background.',
+    learned: "My first design, a blank weekly grid, recreated the exact problem it claimed to solve. One interview showed me a better direction: take decisions away. Suggest a meal, and let the family say yes or no.",
     visual: { big: '1,095', lbl: 'meal decisions a year, in a joint family of six' },
     links: [['Case study', CS + 'work/bhojan/'], ['Live site', 'https://bhojan-beta.vercel.app']] },
   { month: 'Apr', name: 'Plan Karo Chalo', status: 'Live', kind: 'Group trip coordination · Solo build',
     problem: '35% of planned group trips never happen. They die in the WhatsApp chaos before anyone books.',
     did: 'Collected 132+ research data points (27 interviews and 105 survey responses), then built the product solo in eight days.',
     result: 'Reached 91.7% member activation in production. The goal was to move groups from talking about a trip to actually planning one.',
+    learned: "I assumed itinerary building was the pain. The research said dates were: 80%+ of respondents named them the top friction. Had I built what I first imagined, I'd have solved the wrong problem. So I cut four feature categories and built around locking dates.",
     shot: 'img/plan-karo-chalo.webp', cap: 'Live site · plankarochalo.vercel.app',
     links: [['Case study', CS + 'work/plan-karo-chalo/'], ['Live site', 'https://plankarochalo.vercel.app']] },
   { month: 'Apr', name: 'galpals', status: 'Launched', kind: 'Women-only friendship app for Bangalore · Founding PM, team of 6',
     problem: 'Moving to a new city, or simply outgrowing an old social circle, can make finding genuine friendships surprisingly difficult.',
     did: 'Led discovery, wrote the PRD, designed every page, and ran QA with a six-person Buildathon team.',
     result: 'Took the product from a blank page to a Product Hunt launch in four days.',
+    learned: "Most products try to be faster. Here, slower was part of the product. Manual verification and deliberate onboarding steps were designed to make someone comfortable enough to reach out. Automating verification would have been quicker, but could have undermined the safety promise.",
     shot: 'img/galpal.webp', cap: 'Live site · galpal.in',
     links: [['Case study', CS + 'work/galpals/'], ['Live site', 'https://galpal.in/']] },
   { month: 'Sep', name: 'Hitaarth', status: 'Launched', kind: 'A daily reading practice in English and Hindi · Solo build',
     problem: 'We consume information all day. Very little of it stays with us long enough to change what we do.',
     did: 'Built a daily reading practice around one idea, what it means, and one small action. Made it available in four languages.',
     result: 'Launched in September with 669 hand-picked ideas. The product is designed to make learning a daily action, not another endless feed.',
+    learned: "Feeds measure what you consumed. I cared whether anything stayed, so every idea ends with one small action and an \"I did it\" tap. That tap isn't just an interaction; it's a signal that the idea moved beyond reading.",
     visual: { big: '669', lbl: 'hand-picked ideas, one a day, in four languages' },
     links: [['Case study', CS + 'work/hitaarth/'], ['Live app', 'https://the-awakening-quotes-app.vercel.app/']] },
   { month: 'Oct', name: 'RepLedger', status: 'Live demo', kind: 'Phone-first operating system for small gyms · Solo build',
     problem: "A gym's notebook can't tell its owner who owes money, whose membership is expiring, or who has quietly stopped showing up.",
     did: 'Built a phone-first gym management product in one week: dues, part-payments, renewals, QR check-ins, and one-tap WhatsApp reminders.',
     result: 'Designed the dashboard around the decisions an owner needs to make: collect from whom, renew whose plan, and follow up with which inactive member. The live demo brings those actions into one place.',
+    learned: "A report asks an owner to interpret first and act later. Putting the action on the screen itself, like \"Collect ₹2,500\" or \"Remind on WhatsApp\", removes that step. Every screen had to answer one question: does this help collect money or keep a member?",
     shot: 'img/repledger.webp', cap: 'Live demo · repledger-demo.vercel.app',
     links: [['Case study', CS + 'work/repledger/'], ['Live demo', 'https://repledger-demo.vercel.app/']] },
   { month: 'Nov', name: 'BOQ से Quote तक', status: 'Working prototype', kind: 'Showroom quoting for tiles and sanitaryware · Solo build',
     problem: 'Customers send the same BOQ to several showrooms. The showroom that gives them useful options and price clarity first has a better chance of earning the next conversation.',
     did: 'Built a phone-first flow with AI-assisted BOQ parsing, catalogue-only product matching, Good / Better / Best options, WhatsApp sharing, and showroom visit booking.',
     result: "Reframed the job of the first quote: don't try to finish the sale remotely. Help the customer understand their options and give them a reason to visit. The metric to prove it is BOQs that become showroom visits.",
+    learned: "My first idea was \"BOQ in, quote out\". It skipped how people actually choose tiles and sanitaryware: in person. So the first reply's job changed to earning a showroom visit. The quote is the bridge; the showroom is where the decision happens.",
     shot: 'img/boq-se-quote.webp', cap: 'Working concept · boq-se-quote.vercel.app',
     links: [['Case study', CS + 'work/boq-se-quote/'], ['Working concept', 'https://boq-se-quote.vercel.app/']] },
 ];
-// Recording length per memo (seconds), and per transcript line: [words start, line ends].
+// Written by tools/process_audio.py. Recording length per memo (seconds), and per spoken section: [words start, section ends].
+// Four sections means the recording includes "What stayed with me". DUR is also corrected from the file at load time.
 // Line boundaries come from a transcription of the recordings; words inside a line are spread evenly, so highlighting is approximate.
-const DUR = [27.99, 26.57, 30.59, 27.55, 28.71, 22.97, 28.57, 35.23, 41.13];
-const TAPES = [[[1.48,5.72],[6.76,18.5],[18.98,27.54]],[[1.18,10.82],[11.84,18.52],[20,26.14]],[[1.4,11.82],[13.12,21.2],[22.42,30.14]],[[1.48,9.92],[11.32,20.68],[21.82,27.12]],[[1.72,7.96],[9.38,19.28],[20.66,28.26]],[[1.38,9.06],[10.14,17.58],[18.72,22.54]],[[1.38,7.86],[9.56,18.24],[19.48,28.12]],[[1.52,9.08],[10.64,21.92],[22.88,34.8]],[[1.92,11.94],[13.38,25.76],[27.16,40.68]]];
+let DUR = [44.88, 44.98, 54.14, 48.76, 50.94, 41.46, 45.24, 55.36, 62.52];
+const TAPES = [[[3.65,7.73],[8.81,20.25],[22.05,30.53],[31.95,44.45]],[[2.39,12.57],[13.87,20.43],[22.01,29.41],[30.47,44.55]],[[3.79,14.57],[16.11,25.17],[26.59,36.23],[37.75,53.71]],[[4.05,12.79],[14.13,24.01],[25.45,31.77],[33.33,48.31]],[[3.87,11.73],[12.91,24.11],[25.23,33.51],[34.93,50.51]],[[2.77,10.17],[11.45,19.09],[20.39,24.43],[25.89,41.03]],[[2.73,8.95],[10.47,19.23],[20.45,29.11],[31.53,44.79]],[[2.79,10.01],[11.37,21.23],[22.71,35.03],[35.97,54.93]],[[4.05,14.17],[15.27,27.61],[29.13,42.35],[43.89,62.09]]];
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $ = (s, r = document) => r.querySelector(s);
@@ -509,7 +527,17 @@ const chapters = MEMOS.map((m, i) => {
   });
   const links = el('div', 'links');
   m.links.forEach(([label, href]) => { const a = el('a', null, label + ' ↗'); a.href = href; a.target = '_blank'; a.rel = 'noopener'; links.append(a); });
-  text.append(meta, h3, el('div', 'kind', m.kind), player, tr, links);
+  // The reflection. If this memo's recording includes it (a fourth timed line), its words follow the audio;
+  // if not, it is labelled as written later.
+  const recorded = TAPES[i].length === 4;
+  const stayed = el('div', 'stayed rv' + (recorded ? ' tracked' : ''));
+  const lab = el('span', 'mono', 'What stayed with me');
+  if (!recorded) lab.append(el('em', null, 'written later, not in the recording'));
+  const sp = el('p'), sWords = [];
+  m.learned.split(' ').forEach((w, k, a) => { const s = el('span', 'w', w); sp.append(s); if (k < a.length - 1) sp.append(' '); sWords.push(s); });
+  if (recorded) lines.push(sWords);
+  stayed.append(lab, sp);
+  text.append(meta, h3, el('div', 'kind', m.kind), player, tr, stayed, links);
 
   const vis = el('div', 'ch-visual');
   if (m.shot) {
@@ -592,7 +620,14 @@ function advance(i) {
   chapters[i].ch.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
   setTimeout(() => { if (playAll) start(i, 0); }, reduced ? 0 : 500);
 }
-audio.addEventListener('loadedmetadata', () => { if (pendingSeek != null) { audio.currentTime = pendingSeek; pendingSeek = null; } });
+audio.addEventListener('loadedmetadata', () => {
+  if (cur >= 0 && isFinite(audio.duration) && audio.duration > 0) {
+    DUR[cur] = audio.duration;
+    chapters[cur].scrub.setAttribute('aria-valuemax', String(Math.round(audio.duration)));
+  }
+  if (pendingSeek != null) { audio.currentTime = pendingSeek; pendingSeek = null; }
+  if (cur >= 0) render(cur, audio.currentTime || 0);
+});
 audio.addEventListener('play', () => setPlaying(true));
 audio.addEventListener('pause', () => { if (cur >= 0 && !audio.ended) { pos[cur] = audio.currentTime; render(cur, audio.currentTime); } setPlaying(false); });
 audio.addEventListener('seeked', () => cur >= 0 && render(cur, audio.currentTime));
