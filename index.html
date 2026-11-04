@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add('js');</script>
+<script data-goatcounter="https://prateek-mehta.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 <style>
 :root {
   --paper: #f3eee4; --paper-2: #ebe4d6; --card: #fbf8f2;
@@ -311,8 +312,8 @@ footer { padding: 24px 0 120px; color: var(--muted); font: 400 12.5px/1.7 var(--
     <h1 id="hero-h"><span class="l">Nine products.</span><span class="l">One year.</span><span class="l"><em>A lot of thinking out loud.</em></span></h1>
     <p class="lede">Eight years working on systems in banking and insurance. In 2026, I started building products. These are nine stories about the problems I found, the decisions I made, and what happened when I shipped.</p>
     <div class="cta">
-      <button class="btn primary" type="button" data-playall><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>Listen to my year</button>
-      <a class="btn" href="#memos">Explore the projects</a>
+      <button class="btn primary" type="button" data-playall data-track="hero-listen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>Listen to my year</button>
+      <a class="btn" href="#memos" data-track="hero-explore">Explore the projects</a>
     </div>
     <p class="disclose">Narrated in my cloned voice, generated with Speechify. Nine memos, about 7.5 minutes.</p>
     <div class="hero-wave" aria-hidden="true"></div>
@@ -321,7 +322,7 @@ footer { padding: 24px 0 120px; color: var(--muted); font: 400 12.5px/1.7 var(--
   <section id="memos" class="wrap" aria-labelledby="memos-h">
     <div class="memos-head">
       <h2 id="memos-h">February to <em>November</em></h2>
-      <div class="side"><span class="mono" style="color:var(--muted)">9 memos · press play on any</span><button class="btn primary" type="button" data-playall><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>Play all</button></div>
+      <div class="side"><span class="mono" style="color:var(--muted)">9 memos · press play on any</span><button class="btn primary" type="button" data-playall data-track="memos-play-all"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>Play all</button></div>
     </div>
     <div class="timeline">
       <div class="spine" aria-hidden="true"><b></b></div>
@@ -395,9 +396,9 @@ footer { padding: 24px 0 120px; color: var(--muted); font: 400 12.5px/1.7 var(--
         <h2 id="close-h">Memo 10 is <em>yours.</em></h2>
         <p class="body">I like finding the point where a messy human problem becomes a clear product decision. I talk to users, challenge the first solution, build quickly, and look for the number that tells me whether it worked. If there's a problem worth solving, or a growth experiment worth running, I want to hear about it.</p>
         <div class="cta">
-          <a class="btn primary" href="https://proisback.github.io/my-portfolio/" target="_blank" rel="noopener">Full portfolio</a>
-          <a class="btn" href="mailto:prateek.milestoneindia@gmail.com">Email me</a>
-          <a class="btn" href="https://www.linkedin.com/in/prateek-mehta-xlri/" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn primary" href="https://proisback.github.io/my-portfolio/" target="_blank" rel="noopener" data-track="close-full-portfolio">Full portfolio</a>
+          <a class="btn" href="mailto:prateek.milestoneindia@gmail.com" data-track="close-email">Email me</a>
+          <a class="btn" href="https://www.linkedin.com/in/prateek-mehta-xlri/" target="_blank" rel="noopener" data-track="close-linkedin">LinkedIn</a>
         </div>
       </div>
     </div>
@@ -510,6 +511,14 @@ function bars(seed, count) {
 }
 const PLAY = '<svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg><svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>';
 
+/* ---------- Analytics (GoatCounter: no cookies). Events are named vm-<name>. ---------- */
+function track(name) {
+  try { if (window.goatcounter && goatcounter.count) goatcounter.count({ path: 'vm-' + name, title: name, event: true }); } catch (e) {}
+}
+const tracked = new Set();
+const trackOnce = name => { if (!tracked.has(name)) { tracked.add(name); track(name); } };
+document.addEventListener('click', e => { const t = e.target.closest('[data-track]'); if (t) track(t.dataset.track); });
+
 /* ---------- Hero: waveform, transcribed headline, recording clock ---------- */
 const hw = $('.hero-wave');
 bars('Prateek Mehta 2026', narrow ? 56 : 110).forEach((v, i) => { const b = el('i'); b.style.setProperty('--h', v); b.style.setProperty('--d', (i % 17) / 17 * 2.4); hw.append(b); });
@@ -560,7 +569,7 @@ const chapters = MEMOS.map((m, i) => {
     return words;
   });
   const links = el('div', 'links');
-  m.links.forEach(([label, href]) => { const a = el('a', null, label + ' ↗'); a.href = href; a.target = '_blank'; a.rel = 'noopener'; links.append(a); });
+  m.links.forEach(([label, href]) => { const a = el('a', null, label + ' ↗'); a.href = href; a.target = '_blank'; a.rel = 'noopener'; a.dataset.track = 'memo-' + pad(i + 1) + '-' + label.toLowerCase().replace(/\s+/g, '-'); links.append(a); });
   // The reflection. If this memo's recording includes it (a fourth timed line), its words follow the audio;
   // if not, it is labelled as written later.
   const recorded = TAPES[i].length === 4;
@@ -647,6 +656,7 @@ function start(i, at) {
 }
 function toggle(i) {
   if (cur === i && !audio.paused) { audio.pause(); return; }
+  trackOnce('memo-' + pad(i + 1) + '-play');
   playAll = false;
   start(i);
 }
@@ -793,7 +803,7 @@ function lbShow(i, dir) {
 }
 if (lb.showModal) {
   cards.forEach((a, i) => a.addEventListener('click', e => {
-    e.preventDefault(); lbOpener = a; lbShow(i); lb.showModal(); $('.lb-next').focus();
+    e.preventDefault(); lbOpener = a; lbShow(i); lb.showModal(); $('.lb-next').focus(); trackOnce('insights-gallery-open');
   }));
   $('.lb-prev').addEventListener('click', () => lbShow(lbAt - 1, -1));
   $('.lb-next').addEventListener('click', () => lbShow(lbAt + 1, 1));
