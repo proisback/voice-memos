@@ -195,6 +195,29 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .ev-row img { display: block; width: 100%; height: auto; aspect-ratio: 1000 / 680; object-fit: cover; }
 @media (max-width: 1000px) { .ev-row { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 640px) { .ev-row { grid-template-columns: repeat(2, 1fr); } }
+/* Lightbox for the Insights cards */
+.lightbox { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; max-width: none; max-height: none; overflow: hidden; margin: 0; padding: 0; border: 0; background: rgba(20, 18, 16, .94); color: var(--paper); }
+.lightbox:not([open]) { display: none; }
+.lightbox::backdrop { background: transparent; }
+.lb-stage { position: absolute; inset: 64px 88px 72px; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; touch-action: pan-y; }
+.lb-img { max-width: 100%; max-height: calc(100% - 40px); border-radius: 18px; box-shadow: 0 30px 60px -30px rgba(0,0,0,.7); user-select: none; -webkit-user-drag: none; transition: opacity .25s, transform .3s var(--ease); }
+.lb-img.out-l { opacity: 0; transform: translateX(-28px); }
+.lb-img.out-r { opacity: 0; transform: translateX(28px); }
+.lb-cap { display: flex; gap: 14px; color: #b6ab98; font-size: 12px; }
+.lb-count { color: var(--rec); }
+.lb-btn { position: absolute; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; border: 1px solid #4d473f; background: rgba(36,33,29,.85); color: var(--paper); transition: background .2s, border-color .2s; }
+.lb-btn:hover { background: var(--rec); border-color: var(--rec); }
+.lb-btn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.lb-prev { left: 20px; top: 50%; transform: translateY(-50%); }
+.lb-next { right: 20px; top: 50%; transform: translateY(-50%); }
+.lb-close { right: 20px; top: 18px; }
+@media (max-width: 640px) {
+  .lb-stage { inset: 70px 12px 96px; }
+  .lb-prev, .lb-next { top: auto; bottom: 22px; transform: none; }
+  .lb-prev { left: calc(50% - 64px); }
+  .lb-next { right: calc(50% - 64px); }
+}
+@media (prefers-reduced-motion: reduce) { .lb-img { transition: none; } }
 .flow-close { margin-top: 70px; font: 400 clamp(30px, 4vw, 52px)/1.12 var(--serif); max-width: 20em; }
 .flow-close em { color: var(--rec); }
 
@@ -349,14 +372,14 @@ footer { padding: 24px 0 120px; color: var(--muted); font: 400 12.5px/1.7 var(--
       </div>
 
       <div class="evidence rv">
-        <p class="mono" style="color:#b6ab98">The original Insights cards · tap to open</p>
+        <p class="mono" style="color:#b6ab98">The original Insights cards · tap to view</p>
         <div class="ev-row">
-          <a href="img/flow/total-words-dictated.webp" target="_blank" rel="noopener"><img src="img/flow/total-words-dictated.webp" alt="Wispr Flow card: total words dictated" loading="lazy" decoding="async" width="1000" height="677"></a>
-          <a href="img/flow/flow-highlights.webp" target="_blank" rel="noopener"><img src="img/flow/flow-highlights.webp" alt="Wispr Flow card: Flow highlights" loading="lazy" decoding="async" width="1000" height="677"></a>
-          <a href="img/flow/flow-streak.webp" target="_blank" rel="noopener"><img src="img/flow/flow-streak.webp" alt="Wispr Flow card: daily streak" loading="lazy" decoding="async" width="1000" height="677"></a>
-          <a href="img/flow/how-fast-you-flow.webp" target="_blank" rel="noopener"><img src="img/flow/how-fast-you-flow.webp" alt="Wispr Flow card: 93 words per minute, top 4%" loading="lazy" decoding="async" width="1000" height="677"></a>
-          <a href="img/flow/where-you-flow.webp" target="_blank" rel="noopener"><img src="img/flow/where-you-flow.webp" alt="Wispr Flow card: where you Flow" loading="lazy" decoding="async" width="1000" height="700"></a>
-          <a href="img/flow/your-flow-activity.webp" target="_blank" rel="noopener"><img src="img/flow/your-flow-activity.webp" alt="Wispr Flow card: activity calendar" loading="lazy" decoding="async" width="1000" height="677"></a>
+          <a href="img/flow/total-words-dictated.webp"><img src="img/flow/total-words-dictated.webp" alt="Wispr Flow card: total words dictated" loading="lazy" decoding="async" width="1000" height="677"></a>
+          <a href="img/flow/flow-highlights.webp"><img src="img/flow/flow-highlights.webp" alt="Wispr Flow card: Flow highlights" loading="lazy" decoding="async" width="1000" height="677"></a>
+          <a href="img/flow/flow-streak.webp"><img src="img/flow/flow-streak.webp" alt="Wispr Flow card: daily streak" loading="lazy" decoding="async" width="1000" height="677"></a>
+          <a href="img/flow/how-fast-you-flow.webp"><img src="img/flow/how-fast-you-flow.webp" alt="Wispr Flow card: 93 words per minute, top 4%" loading="lazy" decoding="async" width="1000" height="677"></a>
+          <a href="img/flow/where-you-flow.webp"><img src="img/flow/where-you-flow.webp" alt="Wispr Flow card: where you Flow" loading="lazy" decoding="async" width="1000" height="700"></a>
+          <a href="img/flow/your-flow-activity.webp"><img src="img/flow/your-flow-activity.webp" alt="Wispr Flow card: activity calendar" loading="lazy" decoding="async" width="1000" height="677"></a>
         </div>
       </div>
 
@@ -385,6 +408,16 @@ footer { padding: 24px 0 120px; color: var(--muted); font: 400 12.5px/1.7 var(--
 <footer class="wrap">
   <span>Dictated with Wispr Flow. Built with Claude Code. November 2026.</span>
 </footer>
+
+<dialog class="lightbox" aria-label="Wispr Flow Insights cards">
+  <figure class="lb-stage">
+    <img class="lb-img" alt="">
+    <figcaption class="lb-cap mono"><span class="lb-count"></span><span class="lb-title"></span></figcaption>
+  </figure>
+  <button class="lb-btn lb-prev" type="button" aria-label="Previous card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <button class="lb-btn lb-next" type="button" aria-label="Next card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+  <button class="lb-btn lb-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+</dialog>
 
 <div class="mini" role="region" aria-label="Now playing">
   <button class="pbtn" type="button" aria-label="Pause"><svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg><svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button>
@@ -741,6 +774,47 @@ if (io && !reduced) {
   const f = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { fillFlow(true); f.disconnect(); } }, { threshold: .15 });
   f.observe($('.hero-stat'));
 } else fillFlow(false);
+
+/* ---------- Insights cards: in-page gallery that loops ---------- */
+const lb = $('.lightbox'), lbImg = $('.lb-img'), lbCount = $('.lb-count'), lbTitle = $('.lb-title');
+const cards = [...document.querySelectorAll('.ev-row a')];
+let lbAt = 0, lbOpener = null;
+function lbShow(i, dir) {
+  lbAt = (i + cards.length) % cards.length;
+  const img = cards[lbAt].querySelector('img');
+  const swap = () => {
+    lbImg.src = cards[lbAt].href; lbImg.alt = img.alt;
+    lbCount.textContent = (lbAt + 1) + ' / ' + cards.length;
+    { const t = img.alt.replace('Wispr Flow card: ', ''); lbTitle.textContent = t.charAt(0).toUpperCase() + t.slice(1); }
+    lbImg.classList.remove('out-l', 'out-r');
+  };
+  if (dir && !reduced && lb.open) { lbImg.classList.add(dir > 0 ? 'out-l' : 'out-r'); setTimeout(swap, 180); } else swap();
+  [-1, 1].forEach(d => { const n = new Image(); n.src = cards[(lbAt + d + cards.length) % cards.length].href; });
+}
+if (lb.showModal) {
+  cards.forEach((a, i) => a.addEventListener('click', e => {
+    e.preventDefault(); lbOpener = a; lbShow(i); lb.showModal(); $('.lb-next').focus();
+  }));
+  $('.lb-prev').addEventListener('click', () => lbShow(lbAt - 1, -1));
+  $('.lb-next').addEventListener('click', () => lbShow(lbAt + 1, 1));
+  $('.lb-close').addEventListener('click', () => lb.close());
+  lb.addEventListener('click', e => { if (e.target === lb || e.target.classList.contains('lb-stage')) lb.close(); });
+  lb.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); lbShow(lbAt + 1, 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); lbShow(lbAt - 1, -1); }
+  });
+  lb.addEventListener('close', () => { document.body.style.overflow = ''; lbOpener && lbOpener.focus(); });
+  lb.addEventListener('cancel', () => {});
+  new MutationObserver(() => { document.body.style.overflow = lb.open ? 'hidden' : ''; }).observe(lb, { attributes: true, attributeFilter: ['open'] });
+  // Swipe left or right on touch screens.
+  let sx = null, sy = 0;
+  lb.addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+  lb.addEventListener('touchend', e => {
+    if (sx == null) return;
+    const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; sx = null;
+    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) lbShow(lbAt + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+  });
+}
 
 /* ---------- Closing waveform settles ---------- */
 const ew = $('.end-wave');
