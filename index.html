@@ -4,452 +4,715 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Prateek Mehta · Nine Voice Memos</title>
-<meta name="description" content="Nine products built in 2026. The problems I found, the decisions I made, and what happened when I shipped.">
+<meta name="description" content="Nine products built in 2026. The problems I found, the decisions I made, and what happened when I shipped. Press play.">
 <meta property="og:title" content="Prateek Mehta · Nine Voice Memos">
-<meta property="og:description" content="Nine products built in 2026. The problems I found, the decisions I made, and what happened when I shipped.">
+<meta property="og:description" content="Nine products. One year. A lot of thinking out loud.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='%23e8432e'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');</script>
 <style>
-  :root {
-    --paper: #f3eee4;
-    --card: #fbf8f2;
-    --ink: #1d1b18;
-    --muted: #6e675c;
-    --line: #ddd5c6;
-    --rec: #e8432e;
-    --rec-soft: #f6d5cc;
-    --wave: #c9bfae;
-    --display: 'Bricolage Grotesque', Georgia, serif;
-    --serif: 'Instrument Serif', Georgia, serif;
-    --mono: 'DM Mono', ui-monospace, monospace;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { -webkit-text-size-adjust: 100%; }
-  body {
-    background: var(--paper);
-    color: var(--ink);
-    font: 400 17px/1.6 var(--display);
-    background-image: radial-gradient(rgba(29,27,24,.05) 1px, transparent 1px);
-    background-size: 22px 22px;
-  }
-  a { color: inherit; }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 0 22px; }
+:root {
+  --paper: #f3eee4; --paper-2: #ebe4d6; --card: #fbf8f2;
+  --ink: #1d1b18; --ink-2: #3a3630; --muted: #6b6458; --line: #d9d0bf;
+  --rec: #e3402b; --rec-ink: #c7321f; --rec-soft: #f6d5cc; --wave: #c9bfae;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Bricolage Grotesque', system-ui, sans-serif;
+  --mono: 'DM Mono', ui-monospace, monospace;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { background: var(--paper); color: var(--ink); font: 400 17px/1.6 var(--sans); overflow-x: hidden; }
+body::before { /* paper grain */
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 100; opacity: .07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+a { color: inherit; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--rec); outline-offset: 3px; border-radius: 4px; }
+.wrap { width: min(1180px, 100% - 44px); margin: 0 auto; }
+.mono { font: 500 12px/1.3 var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--rec); display: inline-block; flex: none; }
+.pulse { animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(227,64,43,.45); } 60% { box-shadow: 0 0 0 8px rgba(227,64,43,0); opacity: .55; } }
 
-  /* Header */
-  header { padding: 72px 0 40px; }
-  .status {
-    display: inline-flex; align-items: center; gap: 10px;
-    font: 500 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
-  }
-  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--rec); animation: blink 1.6s ease-in-out infinite; }
-  @keyframes blink { 50% { opacity: .25; } }
-  h1 {
-    margin-top: 26px;
-    font: 800 clamp(38px, 6.6vw, 62px)/1 var(--display);
-    letter-spacing: -.035em;
-  }
-  h1 em { font: italic 400 1.05em/1 var(--serif); letter-spacing: -.01em; color: var(--rec); }
-  .lede { margin-top: 26px; max-width: 34em; font-size: 19px; color: #3a3630; }
-  .lede strong { font-weight: 600; color: var(--ink); }
-  .meta-row {
-    margin-top: 30px; display: flex; flex-wrap: wrap; gap: 8px 22px;
-    font: 400 13px/1.4 var(--mono); color: var(--muted);
-  }
-  .meta-row a { text-decoration: none; border-bottom: 1px solid var(--line); }
-  .meta-row a:hover { border-color: var(--rec); color: var(--ink); }
+/* Top bar */
+.top { position: absolute; top: 0; left: 0; right: 0; z-index: 5; }
+.top .wrap { display: flex; justify-content: space-between; align-items: center; padding: 22px 0; }
+.top nav { display: flex; gap: 22px; }
+.top a { text-decoration: none; color: var(--muted); }
+.top a:hover { color: var(--ink); }
+.who { display: flex; align-items: center; gap: 10px; color: var(--ink) !important; }
 
-  /* Memo list */
-  .list-head {
-    display: flex; justify-content: space-between; align-items: baseline;
-    padding: 18px 0 10px; border-bottom: 1.5px solid var(--ink);
-    font: 500 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase;
-  }
-  .play-all {
-    font: 500 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase;
-    background: none; border: 0; color: var(--rec); cursor: pointer; padding: 6px 0;
-  }
-  .play-all:hover, .sound:hover { text-decoration: underline; }
-  .controls { display: flex; gap: 18px; align-items: baseline; }
-  .sound { font: 500 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 6px 0; }
-  .sound[aria-pressed="false"] { text-decoration: line-through; }
-  .sound:focus-visible { outline: 2px solid var(--rec); outline-offset: 3px; }
-  .month {
-    padding: 34px 0 8px;
-    font: italic 400 26px/1 var(--serif); color: var(--muted);
-  }
-  .memo {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 18px;
-    margin: 12px 0;
-    padding: 20px 22px 18px;
-    transition: border-color .3s, box-shadow .3s;
-  }
-  .memo.is-open { border-color: var(--ink); box-shadow: 0 10px 30px -18px rgba(29,27,24,.45); }
-  .memo-top { display: grid; grid-template-columns: 52px 1fr; gap: 16px; align-items: center; }
-  .play {
-    width: 52px; height: 52px; border-radius: 50%;
-    border: 1.5px solid var(--ink); background: transparent; cursor: pointer;
-    display: grid; place-items: center; transition: background .2s, transform .15s;
-  }
-  .play:hover { background: var(--rec-soft); }
-  .play:active { transform: scale(.94); }
-  .play:focus-visible, .play-all:focus-visible, a:focus-visible { outline: 2px solid var(--rec); outline-offset: 3px; }
-  .play svg { width: 18px; height: 18px; fill: var(--ink); }
-  .play .i-stop { display: none; }
-  .memo.is-playing .play { background: var(--rec); border-color: var(--rec); }
-  .memo.is-playing .play svg { fill: #fff; }
-  .memo.is-playing .i-play { display: none; }
-  .memo.is-playing .i-stop { display: block; }
-  .memo-no { font: 500 12px/1 var(--mono); letter-spacing: .1em; color: var(--muted); }
-  .memo-no .chip {
-    margin-left: 8px; padding: 3px 7px; border-radius: 99px; border: 1px solid var(--line);
-    font-size: 10.5px; letter-spacing: .12em;
-  }
-  .chip.live { border-color: #8bb08a; color: #3f6b3e; }
-  .memo h2 { margin-top: 6px; font: 600 22px/1.2 var(--display); letter-spacing: -.015em; }
-  .memo .kind { font-size: 14.5px; color: var(--muted); margin-top: 2px; }
+/* Hero */
+.hero { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: 110px 0 70px; position: relative; }
+.rec-line { display: flex; align-items: center; gap: 12px; color: var(--muted); flex-wrap: wrap; }
+.rec-line .clock { color: var(--rec-ink); font-variant-numeric: tabular-nums; }
+.hero h1 { margin-top: 26px; font: 400 clamp(52px, 8.6vw, 124px)/.94 var(--serif); letter-spacing: -.02em; }
+.hero h1 .w { white-space: nowrap; }
+.hero h1 .l { display: block; }
+.hero h1 em { color: var(--rec); }
+.js .hero h1 .w { opacity: 0; }
+.js .hero h1 .w.on { opacity: 1; transition: opacity .25s; }
+.caret { display: inline-block; width: .06em; height: .78em; margin-left: .06em; background: var(--rec); vertical-align: -.04em; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.hero .lede { margin-top: 30px; max-width: 37em; font-size: clamp(17px, 1.6vw, 20px); color: var(--ink-2); }
+.cta { margin-top: 34px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.btn { display: inline-flex; align-items: center; gap: 12px; padding: 16px 24px; border-radius: 99px; font: 500 15px/1 var(--mono); letter-spacing: .02em; text-decoration: none; border: 1.5px solid var(--ink); transition: background .2s, color .2s, transform .15s; min-height: 52px; }
+.btn:active { transform: scale(.97); }
+.btn.primary { background: var(--ink); color: var(--paper); }
+.btn.primary:hover { background: var(--rec); border-color: var(--rec); }
+.btn:not(.primary):hover { background: var(--ink); color: var(--paper); }
+.btn svg { width: 14px; height: 14px; fill: currentColor; }
+.disclose { margin-top: 18px; color: var(--muted); font: 400 13px/1.5 var(--mono); }
+.hero-wave { margin-top: 56px; height: 90px; display: flex; align-items: center; gap: 3px; transform-origin: left center; }
+.hero-wave i { flex: 1; height: 100%; border-radius: 3px; background: var(--ink); transform: scaleY(var(--h)); opacity: .85; }
+.hero-wave i:nth-child(7n) { background: var(--rec); }
+.js .hero-wave i { animation: breathe 2.4s ease-in-out infinite; animation-delay: calc(var(--d) * -1s); }
+@keyframes breathe { 50% { transform: scaleY(calc(var(--h) * .35)); } }
 
-  .wave { margin: 16px 0 0 68px; height: 34px; display: flex; align-items: center; gap: 2px; }
-  .wave i { flex: 1; min-width: 2px; border-radius: 2px; background: var(--wave); transition: background .12s; }
-  .wave i.on { background: var(--rec); }
+/* Timeline */
+.memos-head { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; border-bottom: 1.5px solid var(--ink); padding: 40px 0 18px; }
+.memos-head h2 { font: 400 clamp(40px, 5.4vw, 72px)/1 var(--serif); letter-spacing: -.015em; }
+.memos-head h2 em { color: var(--rec); }
+.memos-head .side { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.timeline { position: relative; padding-left: 112px; }
+.spine { position: absolute; left: 47px; top: 0; bottom: 0; width: 2px; background: var(--line); }
+.spine b { position: absolute; inset: 0; background: var(--rec); transform-origin: top; transform: scaleY(var(--p, 0)); }
+.chapter { position: relative; display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); gap: 64px; align-items: start; padding: 96px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 10px; }
+.chapter:last-child { border-bottom: 0; }
+.chapter.flip .ch-text { order: 2; }
+.month { position: absolute; left: -112px; width: 96px; top: 96px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.node { width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid var(--ink); background: var(--paper); display: grid; place-items: center; font: 500 13px/1 var(--mono); transition: background .3s, color .3s, border-color .3s, transform .3s var(--ease); }
+.month span { font: italic 400 19px/1 var(--serif); color: var(--muted); background: var(--paper); padding: 3px 0; }
+.chapter.is-active .node { background: var(--ink); color: var(--paper); transform: scale(1.12); }
+.chapter.is-playing .node { background: var(--rec); border-color: var(--rec); color: #fff; animation: pulse 1.6s ease-in-out infinite; }
+.ch-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; color: var(--muted); }
+.chip { padding: 5px 10px; border-radius: 99px; border: 1px solid var(--line); font-size: 10.5px; }
+.chip.live { border-color: #86ad85; color: #3c673b; }
+.ch-text h3 { margin-top: 12px; font: 400 clamp(40px, 4.6vw, 64px)/1 var(--serif); letter-spacing: -.015em; color: var(--ink-2); transition: color .3s; }
+.chapter.is-active h3 { color: var(--ink); }
+.kind { margin-top: 8px; color: var(--muted); font-size: 15.5px; }
 
-  .transcript { margin: 18px 0 2px 68px; display: none; }
-  .memo.is-open .transcript { display: block; }
-  .t-line { margin-bottom: 14px; }
-  .t-label { display: block; font: 500 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
-  .t-text { font-size: 17.5px; line-height: 1.55; }
-  .t-text .w { opacity: .14; transition: opacity .18s; }
-  .t-text .w.said { opacity: 1; }
-  .links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
-  .links a {
-    font: 500 12.5px/1 var(--mono); text-decoration: none;
-    padding: 9px 12px; border-radius: 99px; border: 1px solid var(--ink);
-    transition: background .2s, color .2s;
-  }
-  .links a:hover { background: var(--ink); color: var(--card); }
+/* Player */
+.player { margin-top: 26px; display: grid; grid-template-columns: 56px 1fr auto; gap: 16px; align-items: center; padding: 14px 18px 14px 14px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; transition: border-color .3s, box-shadow .3s; }
+.chapter.is-current .player { border-color: var(--ink); box-shadow: 0 14px 34px -24px rgba(29,27,24,.6); }
+.pbtn { width: 56px; height: 56px; border-radius: 50%; background: var(--ink); color: var(--paper); display: grid; place-items: center; transition: background .2s, transform .15s; }
+.pbtn:hover { background: var(--rec); }
+.pbtn:active { transform: scale(.94); }
+.pbtn svg { width: 18px; height: 18px; fill: currentColor; }
+.pbtn .i-pause, .is-playing .pbtn .i-play { display: none; }
+.is-playing .pbtn .i-pause { display: block; }
+.is-playing .pbtn { background: var(--rec); }
+.scrub { height: 44px; display: flex; align-items: center; gap: 2px; cursor: pointer; touch-action: none; border-radius: 6px; }
+.scrub i { flex: 1; border-radius: 2px; background: var(--wave); height: calc(var(--h) * 100%); transition: background .12s; }
+.scrub i.on { background: var(--rec); }
+.time { font: 400 13px/1 var(--mono); color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.unavailable { margin-top: 10px; font: 400 13px/1.4 var(--mono); color: var(--rec-ink); }
 
-  /* Closing */
-  .closing { padding: 70px 0 30px; }
-  .closing h3 { font: 800 clamp(30px, 6vw, 46px)/1.02 var(--display); letter-spacing: -.03em; }
-  .closing h3 em { font: italic 400 1.05em/1 var(--serif); color: var(--rec); }
-  .closing p { margin-top: 16px; max-width: 34em; color: #3a3630; }
-  .contact { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 10px; }
-  .contact a {
-    font: 500 14px/1 var(--mono); text-decoration: none; padding: 13px 18px; border-radius: 99px;
-    border: 1.5px solid var(--ink);
-  }
-  .contact a.primary { background: var(--ink); color: var(--paper); }
-  .contact a:hover { background: var(--rec); border-color: var(--rec); color: #fff; }
-  footer { padding: 40px 0 60px; font: 400 12px/1.6 var(--mono); color: var(--muted); }
+/* Transcript */
+.transcript { margin-top: 28px; display: grid; gap: 18px; }
+.tl .mono { color: var(--muted); font-size: 11px; display: block; margin-bottom: 6px; }
+.tl p { font: 400 15.5px/1.65 var(--mono); color: var(--ink); }
+.tl.result p { font-weight: 500; }
+.is-tracking .tl .w { opacity: .3; transition: opacity .2s; }
+.is-tracking .tl .w.said { opacity: 1; }
+.links { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 8px; }
+.links a { font: 500 13px/1 var(--mono); text-decoration: none; padding: 12px 16px; border-radius: 99px; border: 1px solid var(--ink); transition: background .2s, color .2s; }
+.links a:hover { background: var(--ink); color: var(--paper); }
 
-  /* Load-in */
-  .rise { opacity: 0; transform: translateY(14px); animation: rise .7s cubic-bezier(.2,.7,.2,1) forwards; }
-  @keyframes rise { to { opacity: 1; transform: none; } }
+/* Visuals */
+.ch-visual { position: sticky; top: 90px; }
+.ch-visual figure { margin: 0; }
+.shot { margin: 0 auto; width: min(300px, 78%); border-radius: 34px; padding: 10px; background: var(--ink); box-shadow: 0 40px 60px -40px rgba(29,27,24,.55); }
+.shot img { display: block; width: 100%; height: auto; aspect-ratio: 540 / 980; object-fit: cover; object-position: top; border-radius: 26px; background: var(--paper-2); }
+.cap { margin-top: 14px; text-align: center; color: var(--muted); }
+.typo { border-top: 1.5px solid var(--ink); padding-top: 22px; position: relative; isolation: isolate; }
+.typo .ghost { position: absolute; right: -6px; top: 150px; font: 400 230px/1 var(--serif); color: var(--paper-2); z-index: -1; user-select: none; }
+.typo .big { font: 400 clamp(84px, 10vw, 150px)/.9 var(--serif); letter-spacing: -.03em; color: var(--rec); }
+.typo .lbl { margin-top: 18px; max-width: 18em; font: italic 400 22px/1.35 var(--serif); color: var(--ink-2); }
+.typo .src { margin-top: 16px; color: var(--muted); }
 
-  @media (max-width: 560px) {
-    body { font-size: 16px; }
-    header { padding: 48px 0 28px; }
-    .memo { padding: 16px 16px 14px; border-radius: 14px; }
-    .memo-top { grid-template-columns: 44px 1fr; gap: 12px; }
-    .play { width: 44px; height: 44px; }
-    .wave, .transcript { margin-left: 0; }
-    .memo h2 { font-size: 19px; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .dot, .rise { animation: none; opacity: 1; transform: none; }
-    .t-text .w { opacity: 1; transition: none; }
-  }
+/* Reveal (JS only, never hides content without JS) */
+.js .rv { opacity: 0; transform: translateY(26px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+.js .rv.in { opacity: 1; transform: none; }
+.js .clip { clip-path: inset(0 0 100% 0 round 34px); transition: clip-path 1.1s var(--ease); }
+.js .clip.in { clip-path: inset(0 0 0 0 round 34px); }
+
+/* Flow chapter */
+.flow { background: var(--ink); color: var(--paper); padding: 120px 0 110px; margin-top: 40px; }
+.flow .lab { color: #b6ab98; display: flex; align-items: center; gap: 10px; }
+.flow h2 { margin-top: 22px; font: 400 clamp(46px, 7vw, 104px)/.95 var(--serif); letter-spacing: -.02em; max-width: 11em; }
+.flow h2 em { color: var(--rec); }
+.flow .sub { margin-top: 24px; max-width: 34em; color: #d8cfbf; font-size: 18px; }
+.hero-stat { margin-top: 70px; display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: end; border-bottom: 1px solid #3b3731; padding-bottom: 36px; }
+.hero-stat .num { font: 400 clamp(90px, 17vw, 250px)/.8 var(--serif); letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.hero-stat .what { font: italic 400 24px/1.3 var(--serif); color: #d8cfbf; max-width: 10em; padding-bottom: 10px; }
+.stats { margin-top: 36px; display: grid; grid-template-columns: repeat(12, 1fr); gap: 18px; }
+.cell { border: 1px solid #3b3731; border-radius: 20px; padding: 26px; background: #24211d; }
+.cell .n { font: 400 64px/1 var(--serif); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.cell .n small { font-size: .42em; color: #b6ab98; margin-left: 6px; }
+.cell .k { margin-top: 10px; color: #b6ab98; }
+.c-streak { grid-column: span 6; }
+.c-speed, .c-apps { grid-column: span 3; }
+.c-fix, .c-rank { grid-column: span 6; }
+.c-where { grid-column: 7 / span 6; grid-row: 2 / span 2; }
+.c-rank { display: flex; align-items: center; gap: 22px; }
+.streak { margin-top: 20px; display: grid; grid-template-columns: repeat(18, 1fr); gap: 5px; }
+.streak i { aspect-ratio: 1; border-radius: 4px; background: #3b3731; transition: background .3s; }
+.streak i.on { background: var(--rec); }
+.split { margin-top: 20px; display: flex; height: 14px; border-radius: 99px; overflow: hidden; background: #3b3731; }
+.split b { height: 100%; width: 0; transition: width 1.4s var(--ease); }
+.split .a { background: var(--rec); }
+.split .b { background: #e9d9b8; }
+.legend { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px 22px; font: 400 13px/1.4 var(--mono); color: #d8cfbf; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 8px; vertical-align: -1px; }
+.bars { margin-top: 18px; display: grid; gap: 16px; }
+.bar { display: grid; grid-template-columns: 1fr auto; gap: 7px 14px; font: 400 14px/1.2 var(--mono); }
+.bar .t { height: 8px; grid-column: 1 / -1; border-radius: 99px; background: #3b3731; overflow: hidden; }
+.bar .t b { display: block; height: 100%; width: 0; background: #e9d9b8; border-radius: 99px; transition: width 1.4s var(--ease); }
+.bar:first-child .t b { background: var(--rec); }
+.bar .v { color: var(--paper); font-variant-numeric: tabular-nums; }
+.bar .l { color: #d8cfbf; }
+.badge { width: 128px; height: 128px; flex: none; border-radius: 50%; border: 1.5px dashed var(--rec); display: grid; place-items: center; text-align: center; }
+.badge b { display: block; font: 400 42px/1 var(--serif); color: var(--rec); }
+.badge span { font: 500 9.5px/1 var(--mono); letter-spacing: .14em; color: #d8cfbf; }
+.c-rank p { font: italic 400 22px/1.3 var(--serif); color: #d8cfbf; }
+.evidence { margin-top: 56px; }
+.ev-row { margin-top: 14px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+.ev-row a { display: block; border-radius: 10px; overflow: hidden; border: 1px solid #3b3731; transition: transform .25s var(--ease), border-color .25s; }
+.ev-row a:hover { transform: translateY(-3px); border-color: var(--rec); }
+.ev-row img { display: block; width: 100%; height: auto; aspect-ratio: 1000 / 680; object-fit: cover; }
+@media (max-width: 1000px) { .ev-row { grid-template-columns: repeat(3, 1fr); } }
+.flow-close { margin-top: 70px; font: 400 clamp(30px, 4vw, 52px)/1.12 var(--serif); max-width: 20em; }
+.flow-close em { color: var(--rec); }
+
+/* Closing */
+.closing { padding: 120px 0 40px; }
+.closing .grid { display: grid; grid-template-columns: 320px 1fr; gap: 70px; align-items: center; }
+.portrait { width: 100%; aspect-ratio: 1; border-radius: 50%; overflow: hidden; background: var(--paper-2); border: 1.5px solid var(--ink); }
+.portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.closing h2 { margin-top: 14px; font: 400 clamp(56px, 8.5vw, 128px)/.92 var(--serif); letter-spacing: -.025em; }
+.closing h2 em { color: var(--rec); }
+.closing .body { margin-top: 24px; max-width: 34em; color: var(--ink-2); font-size: 18.5px; }
+.end-wave { margin-top: 90px; height: 70px; display: flex; align-items: center; gap: 3px; }
+.end-wave i { flex: 1; height: 100%; border-radius: 3px; background: var(--ink); transform: scaleY(var(--h)); transition: transform 2.4s var(--ease); transition-delay: calc(var(--d) * 1.2s); }
+.end-wave i:nth-child(9n) { background: var(--rec); }
+.end-wave.settle i { transform: scaleY(.05); }
+footer { padding: 24px 0 120px; color: var(--muted); font: 400 12.5px/1.7 var(--mono); display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+
+/* Mini player */
+.mini { position: fixed; left: 50%; bottom: 16px; z-index: 50; width: min(580px, calc(100% - 24px)); transform: translate(-50%, 160%); visibility: hidden; transition: transform .45s var(--ease), visibility 0s .45s; background: var(--ink); color: var(--paper); border-radius: 20px; padding: 10px 12px 10px 10px; display: grid; grid-template-columns: 48px 1fr auto; gap: 14px; align-items: center; box-shadow: 0 20px 40px -18px rgba(0,0,0,.5); border: 1px solid #4d473f; }
+.mini.show { transform: translate(-50%, 0); visibility: visible; transition: transform .45s var(--ease); }
+.mini .pbtn { width: 48px; height: 48px; background: var(--rec); }
+.mini .pbtn:hover { background: var(--rec-ink); }
+.mini.is-playing .i-play, .mini:not(.is-playing) .i-pause { display: none; }
+.mini.is-playing .i-pause { display: block; }
+.mini .ttl { font: 400 20px/1.1 var(--serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mini .meta { color: #b6ab98; font-size: 10.5px; margin-bottom: 5px; }
+.mini .prog { margin-top: 8px; height: 3px; border-radius: 3px; background: #3b3731; overflow: hidden; }
+.mini .prog b { display: block; height: 100%; width: 0; background: var(--rec); }
+.mini .jump { font: 500 12px/1 var(--mono); padding: 12px 14px; border-radius: 99px; border: 1px solid #5a544b; white-space: nowrap; }
+.mini .jump:hover { border-color: var(--paper); }
+
+@media (max-width: 1000px) {
+  .chapter { grid-template-columns: 1fr; gap: 40px; padding: 70px 0; }
+  .chapter.flip .ch-text { order: 0; }
+  .ch-visual { position: static; }
+  .typo .ghost { font-size: 170px; }
+  .stats { grid-template-columns: repeat(6, 1fr); }
+  .c-streak, .c-fix, .c-where, .c-rank { grid-column: span 6; grid-row: auto; }
+  .closing .grid { grid-template-columns: 1fr; gap: 40px; }
+  .portrait { width: 220px; }
+}
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  .top nav { display: none; }
+  .hero { padding-top: 90px; }
+  .hero-wave { height: 60px; margin-top: 40px; }
+  .timeline { padding-left: 44px; }
+  .spine { left: 14px; }
+  .month { left: -44px; width: 30px; top: 70px; }
+  .node { width: 30px; height: 30px; font-size: 11px; }
+  .month span { display: none; }
+  .player { grid-template-columns: 52px 1fr; padding: 12px; gap: 12px 14px; }
+  .pbtn { width: 52px; height: 52px; }
+  .time { grid-column: 2; margin-top: -8px; }
+  .tl p { font-size: 14.5px; }
+  .typo .big { font-size: 84px; }
+  .typo .ghost { font-size: 130px; top: 110px; }
+  .hero-stat { grid-template-columns: 1fr; gap: 10px; }
+  .cell { padding: 20px; }
+  .cell .n { font-size: 48px; }
+  .c-rank { flex-direction: column; align-items: flex-start; }
+  .streak { grid-template-columns: repeat(12, 1fr); }
+  .mini { grid-template-columns: 44px 1fr auto; gap: 12px; }
+  .mini .pbtn { width: 44px; height: 44px; }
+  .mini .jt { display: none; }
+  .mini .jump { width: 44px; height: 44px; padding: 0; font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .js .rv, .js .clip { opacity: 1; transform: none; clip-path: none; }
+  .js .hero h1 .w { opacity: 1; }
+  .caret { display: none; }
+}
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <header>
-    <div class="status rise"><span class="dot" aria-hidden="true"></span>Nine Voice Memos · 2026</div>
-    <h1 class="rise" style="animation-delay:.08s">I spent a year turning problems into products. <em>Here's the story.</em></h1>
-    <p class="lede rise" style="animation-delay:.16s">Eight years working on systems in banking and insurance taught me where things break. <strong>In 2026, I started building the fixes.</strong> Nine products. Nine voice memos. Each one covers the problem, the decisions behind the product, and what actually shipped. Press play.</p>
-    <div class="meta-row rise" style="animation-delay:.24s">
-      <span>Prateek Mehta</span>
-      <span>Mumbai</span>
-      <a href="https://proisback.github.io/my-portfolio/">Full career story</a>
+<header class="top">
+  <div class="wrap">
+    <a class="who mono" href="#top"><span class="dot pulse" aria-hidden="true"></span>Prateek Mehta</a>
+    <nav class="mono" aria-label="Sections"><a href="#memos">Memos</a><a href="#flow">Flow</a><a href="#contact">Contact</a></nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero wrap" aria-labelledby="hero-h">
+    <div class="rec-line mono"><span class="dot pulse" aria-hidden="true"></span><span>Recording</span><span class="clock" aria-hidden="true">00:00</span><span>· 2026</span></div>
+    <h1 id="hero-h"><span class="l">Nine products.</span><span class="l">One year.</span><span class="l"><em>A lot of thinking out loud.</em></span></h1>
+    <p class="lede">Eight years working on systems in banking and insurance. In 2026, I started building products. These are nine stories about the problems I found, the decisions I made, and what happened when I shipped.</p>
+    <div class="cta">
+      <button class="btn primary" type="button" data-playall><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>Listen to my year</button>
+      <a class="btn" href="#memos">Explore the projects</a>
     </div>
-  </header>
+    <p class="disclose">Narrated in my cloned voice, generated with Speechify. Nine memos, about 4.5 minutes.</p>
+    <div class="hero-wave" aria-hidden="true"></div>
+  </section>
 
-  <main>
-    <div class="list-head"><span>All memos · 9</span><span class="controls"><button class="sound" type="button" aria-pressed="true">Sound on</button><button class="play-all" type="button">Play all ▸</button></span></div>
+  <section id="memos" class="wrap" aria-labelledby="memos-h">
+    <div class="memos-head">
+      <h2 id="memos-h">February to <em>November</em></h2>
+      <div class="side"><span class="mono" style="color:var(--muted)">9 memos · press play on any</span><button class="btn primary" type="button" data-playall><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>Play all</button></div>
+    </div>
+    <div class="timeline">
+      <div class="spine" aria-hidden="true"><b></b></div>
+      <div id="chapters"></div>
+      <noscript><p style="padding:40px 0">The memos need JavaScript to play. Every case study is on <a href="https://proisback.github.io/my-portfolio/">proisback.github.io/my-portfolio</a>.</p></noscript>
+    </div>
+  </section>
 
-    <!-- Memos are rendered from MEMOS below; this noscript keeps every word readable without JS. -->
-    <div id="memos"></div>
-    <noscript><p style="padding:20px 0">Turn on JavaScript to play the memos, or read the full case studies at <a href="https://proisback.github.io/my-portfolio/">proisback.github.io/my-portfolio</a>.</p></noscript>
+  <section id="flow" class="flow" aria-labelledby="flow-h">
+    <div class="wrap">
+      <p class="mono lab"><span class="dot" aria-hidden="true"></span>Wispr Flow Insights · Snapshot captured 4 Nov 2026</p>
+      <h2 id="flow-h">I don't just use voice. <em>I work in it.</em></h2>
+      <p class="sub">Voice has become part of how I think, plan, build, write, and get work done. This portfolio is one more thing I made by starting with a conversation.</p>
 
-    <section class="closing">
-      <h3>Memo 10 is <em>yours.</em></h3>
-      <p>I like finding the point where a messy human problem becomes a clear product decision. I talk to users, challenge the first solution, build quickly, and look for the number that tells me whether it worked. If there's a problem worth solving, or a growth experiment worth running, I want to hear about it.</p>
-      <div class="contact">
-        <a class="primary" href="mailto:prateek.milestoneindia@gmail.com">Email me</a>
-        <a href="https://www.linkedin.com/in/prateek-mehta-xlri/">LinkedIn</a>
-        <a href="https://proisback.github.io/my-portfolio/">Full portfolio</a>
+      <div class="hero-stat rv">
+        <div class="num" data-count="69803">69,803</div>
+        <div class="what">total words dictated</div>
       </div>
-    </section>
-  </main>
 
-  <footer>Dictated with Wispr Flow. Built with Claude Code. November 2026.</footer>
+      <div class="stats">
+        <div class="cell c-streak rv">
+          <div class="n" data-count="36">36</div>
+          <div class="k mono">day longest daily streak</div>
+          <div class="streak" aria-hidden="true"></div>
+        </div>
+        <div class="cell c-speed rv">
+          <div class="n"><span data-count="93">93</span><small>wpm</small></div>
+          <div class="k mono">average speed</div>
+        </div>
+        <div class="cell c-apps rv">
+          <div class="n" data-count="64">64</div>
+          <div class="k mono">apps used</div>
+        </div>
+        <div class="cell c-where rv">
+          <div class="k mono" style="margin-top:0">Where I use Flow · desktop · share of use</div>
+          <div class="bars" id="bars"></div>
+        </div>
+        <div class="cell c-fix rv">
+          <div class="n" data-count="4265">4,265</div>
+          <div class="k mono">fixes made by Flow</div>
+          <div class="split" aria-hidden="true"><b class="a" data-w="2930"></b><b class="b" data-w="1335"></b></div>
+          <div class="legend"><span><i style="background:var(--rec)"></i>2,930 words corrected</span><span><i style="background:#e9d9b8"></i>1,335 dictionary fixes</span></div>
+        </div>
+        <div class="cell c-rank rv">
+          <div class="badge"><div><b>Top 4%</b><span>FOR SPEED</span></div></div>
+          <p>93 words per minute puts me in the top 4% of Wispr Flow users for speed.</p>
+        </div>
+      </div>
+
+      <div class="evidence rv">
+        <p class="mono" style="color:#b6ab98">The original Insights cards · tap to open</p>
+        <div class="ev-row">
+          <a href="img/flow/total-words-dictated.webp" target="_blank" rel="noopener"><img src="img/flow/total-words-dictated.webp" alt="Wispr Flow card: total words dictated" loading="lazy" decoding="async" width="1000" height="677"></a>
+          <a href="img/flow/flow-highlights.webp" target="_blank" rel="noopener"><img src="img/flow/flow-highlights.webp" alt="Wispr Flow card: Flow highlights" loading="lazy" decoding="async" width="1000" height="677"></a>
+          <a href="img/flow/flow-streak.webp" target="_blank" rel="noopener"><img src="img/flow/flow-streak.webp" alt="Wispr Flow card: daily streak" loading="lazy" decoding="async" width="1000" height="677"></a>
+          <a href="img/flow/how-fast-you-flow.webp" target="_blank" rel="noopener"><img src="img/flow/how-fast-you-flow.webp" alt="Wispr Flow card: 93 words per minute, top 4%" loading="lazy" decoding="async" width="1000" height="677"></a>
+          <a href="img/flow/where-you-flow.webp" target="_blank" rel="noopener"><img src="img/flow/where-you-flow.webp" alt="Wispr Flow card: where you Flow" loading="lazy" decoding="async" width="1000" height="700"></a>
+          <a href="img/flow/your-flow-activity.webp" target="_blank" rel="noopener"><img src="img/flow/your-flow-activity.webp" alt="Wispr Flow card: activity calendar" loading="lazy" decoding="async" width="1000" height="677"></a>
+        </div>
+      </div>
+
+      <p class="flow-close rv">69,803 words dictated. 36 days of showing up. <em>And nine products built along the way.</em></p>
+    </div>
+  </section>
+
+  <section id="contact" class="closing wrap" aria-labelledby="close-h">
+    <div class="grid">
+      <div class="portrait rv"><img src="img/prateek.webp" width="520" height="520" alt="Illustrated portrait of Prateek Mehta waving" loading="lazy" decoding="async"></div>
+      <div class="rv">
+        <p class="mono" style="color:var(--muted)">Memo 10 · Recording</p>
+        <h2 id="close-h">Memo 10 is <em>yours.</em></h2>
+        <p class="body">I like finding the point where a messy human problem becomes a clear product decision. I talk to users, challenge the first solution, build quickly, and look for the number that tells me whether it worked. If there's a problem worth solving, or a growth experiment worth running, I want to hear about it.</p>
+        <div class="cta">
+          <a class="btn primary" href="mailto:prateek.milestoneindia@gmail.com">Email me</a>
+          <a class="btn" href="https://www.linkedin.com/in/prateek-mehta-xlri/" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn" href="https://proisback.github.io/my-portfolio/" target="_blank" rel="noopener">Full portfolio</a>
+        </div>
+        <p class="disclose">prateek.milestoneindia@gmail.com · Mumbai</p>
+      </div>
+    </div>
+    <div class="end-wave" aria-hidden="true"></div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <span>Narration: my cloned voice, generated with Speechify.</span>
+  <span>Dictated with Wispr Flow. Built with Claude Code. November 2026.</span>
+</footer>
+
+<div class="mini" role="region" aria-label="Now playing">
+  <button class="pbtn" type="button" aria-label="Pause"><svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg><svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button>
+  <div style="min-width:0"><div class="mono meta"></div><div class="ttl"></div><div class="prog"><b></b></div></div>
+  <button class="jump" type="button" aria-label="Back to memo"><span class="jt">Back to memo </span>↑</button>
 </div>
 
 <script>
 const CS = 'https://proisback.github.io/my-portfolio/';
 const MEMOS = [
-  { month: 'February', name: 'StoreOps Peak-Hour Decision Support', status: 'Prototype', kind: 'Blinkit dark stores · Group project',
+  { month: 'Feb', name: 'StoreOps Peak-Hour Decision Support', status: 'Prototype', kind: 'Blinkit dark stores · Group project',
     problem: "During the 6 to 10 PM rush, store managers can't see their pickers.",
     did: 'Co-authored the PRD as part of a four-person PM squad. We combined 392 reviews, 11 first-person accounts, and a store-manager interview to understand the operational bottlenecks.',
     result: 'Identified an estimated ₹3.16 Cr in annual margin loss per store, and proposed a one-tap intervention to address the problem.',
+    visual: { big: '₹3.16 Cr', lbl: 'estimated annual margin loss per store' },
     links: [['Case study', CS + 'work/storeops/'], ['Prototype', 'https://blinkit-alert-buddy.lovable.app']] },
-  { month: 'March', name: 'Signal', status: 'Prototype', kind: 'Intelligence layer for founder CRM · Group project',
+  { month: 'Mar', name: 'Signal', status: 'Prototype', kind: 'Intelligence layer for founder CRM · Group project',
     problem: "Most CRMs are designed around sales teams. Early-stage founders often lose opportunities because they forget to follow up, or don't know which conversation matters most.",
     did: 'Co-authored the PRD after six founder interviews and research across 80+ sources on CRM adoption.',
     result: "Designed a prototype that brings a founder's conversations together and surfaces the 3 to 5 deals worth acting on each day.",
+    visual: { big: '3 to 5', lbl: 'deals worth acting on, surfaced each day' },
     links: [['Case study', CS + 'work/signal/'], ['Prototype', 'https://signalaicrm.lovable.app']] },
-  { month: 'March', name: 'PMPathfinder', status: 'Live', kind: 'Career navigation for aspiring PMs · Solo build',
+  { month: 'Mar', name: 'PMPathfinder', status: 'Live', kind: 'Career navigation for aspiring PMs · Solo build',
     problem: 'Aspiring product managers struggle to answer one question: "Am I ready for this role?" 84% in our research received no feedback or only vague feedback.',
     did: 'Ran a 38-person survey and six interviews, then built a three-stage AI-scored platform to make readiness more concrete.',
     result: 'Shipped all seven Must-haves. Users can compare themselves against a real job description and get a Ready / Almost / Not Yet assessment.',
+    visual: { big: '84%', lbl: 'received no feedback, or only vague feedback' },
     links: [['Case study', CS + 'work/pmpathfinder/'], ['Live site', 'https://pmpathfinder-psi.vercel.app/']] },
-  { month: 'March', name: 'Bhojan', status: 'Live', kind: 'Weekly meal planner for Indian families · Solo build',
+  { month: 'Mar', name: 'Bhojan', status: 'Live', kind: 'Weekly meal planner for Indian families · Solo build',
     problem: '"Aaj kya banayein?" sounds like a small question. In a joint family of six, it can mean 1,095 meal decisions a year.',
     did: 'Built a suggestion-first meal planner. One user interview changed the direction: instead of making people plan everything, help them decide what to cook next.',
     result: 'Shipped in four days, on $0 infrastructure, with no prior coding background.',
+    visual: { big: '1,095', lbl: 'meal decisions a year, in a joint family of six' },
     links: [['Case study', CS + 'work/bhojan/'], ['Live site', 'https://bhojan-beta.vercel.app']] },
-  { month: 'April', name: 'Plan Karo Chalo', status: 'Live', kind: 'Group trip coordination · Solo build',
+  { month: 'Apr', name: 'Plan Karo Chalo', status: 'Live', kind: 'Group trip coordination · Solo build',
     problem: '35% of planned group trips never happen. They die in the WhatsApp chaos before anyone books.',
     did: 'Collected 132+ research data points (27 interviews and 105 survey responses), then built the product solo in eight days.',
     result: 'Reached 91.7% member activation in production. The goal was to move groups from talking about a trip to actually planning one.',
+    shot: 'img/plan-karo-chalo.webp', cap: 'Live site · plankarochalo.vercel.app',
     links: [['Case study', CS + 'work/plan-karo-chalo/'], ['Live site', 'https://plankarochalo.vercel.app']] },
-  { month: 'April', name: 'galpals', status: 'Launched', kind: 'Women-only friendship app for Bangalore · Founding PM, team of 6',
+  { month: 'Apr', name: 'galpals', status: 'Launched', kind: 'Women-only friendship app for Bangalore · Founding PM, team of 6',
     problem: 'Moving to a new city, or simply outgrowing an old social circle, can make finding genuine friendships surprisingly difficult.',
     did: 'Led discovery, wrote the PRD, designed every page, and ran QA with a six-person Buildathon team.',
     result: 'Took the product from a blank page to a Product Hunt launch in four days.',
+    shot: 'img/galpal.webp', cap: 'Live site · galpal.in',
     links: [['Case study', CS + 'work/galpals/'], ['Live site', 'https://galpal.in/']] },
-  { month: 'September', name: 'Hitaarth', status: 'Launched', kind: 'A daily reading practice in English and Hindi · Solo build',
+  { month: 'Sep', name: 'Hitaarth', status: 'Launched', kind: 'A daily reading practice in English and Hindi · Solo build',
     problem: 'We consume information all day. Very little of it stays with us long enough to change what we do.',
     did: 'Built a daily reading practice around one idea, what it means, and one small action. Made it available in four languages.',
     result: 'Launched in September with 669 hand-picked ideas. The product is designed to make learning a daily action, not another endless feed.',
+    visual: { big: '669', lbl: 'hand-picked ideas, one a day, in four languages' },
     links: [['Case study', CS + 'work/hitaarth/'], ['Live app', 'https://the-awakening-quotes-app.vercel.app/']] },
-  { month: 'October', name: 'RepLedger', status: 'Live demo', kind: 'Phone-first operating system for small gyms · Solo build',
+  { month: 'Oct', name: 'RepLedger', status: 'Live demo', kind: 'Phone-first operating system for small gyms · Solo build',
     problem: "A gym's notebook can't tell its owner who owes money, whose membership is expiring, or who has quietly stopped showing up.",
     did: 'Built a phone-first gym management product in one week: dues, part-payments, renewals, QR check-ins, and one-tap WhatsApp reminders.',
     result: 'Designed the dashboard around the decisions an owner needs to make: collect from whom, renew whose plan, and follow up with which inactive member. The live demo brings those actions into one place.',
+    shot: 'img/repledger.webp', cap: 'Live demo · repledger-demo.vercel.app',
     links: [['Case study', CS + 'work/repledger/'], ['Live demo', 'https://repledger-demo.vercel.app/']] },
-  { month: 'November', name: 'BOQ से Quote तक', status: 'Working prototype', kind: 'Showroom quoting for tiles and sanitaryware · Solo build',
+  { month: 'Nov', name: 'BOQ से Quote तक', status: 'Working prototype', kind: 'Showroom quoting for tiles and sanitaryware · Solo build',
     problem: 'Customers send the same BOQ to several showrooms. The showroom that gives them useful options and price clarity first has a better chance of earning the next conversation.',
     did: 'Built a phone-first flow with AI-assisted BOQ parsing, catalogue-only product matching, Good / Better / Best options, WhatsApp sharing, and showroom visit booking.',
     result: "Reframed the job of the first quote: don't try to finish the sale remotely. Help the customer understand their options and give them a reason to visit. The metric to prove it is BOQs that become showroom visits.",
+    shot: 'img/boq-se-quote.webp', cap: 'Working concept · boq-se-quote.vercel.app',
     links: [['Case study', CS + 'work/boq-se-quote/'], ['Working concept', 'https://boq-se-quote.vercel.app/']] },
 ];
+// Recording length per memo (seconds), and per transcript line: [words start, line ends].
+// Line boundaries come from a transcription of the recordings; words inside a line are spread evenly, so highlighting is approximate.
+const DUR = [27.99, 26.57, 30.59, 27.55, 28.71, 22.97, 28.57, 35.23, 41.13];
+const TAPES = [[[1.48,5.72],[6.76,18.5],[18.98,27.54]],[[1.18,10.82],[11.84,18.52],[20,26.14]],[[1.4,11.82],[13.12,21.2],[22.42,30.14]],[[1.48,9.92],[11.32,20.68],[21.82,27.12]],[[1.72,7.96],[9.38,19.28],[20.66,28.26]],[[1.38,9.06],[10.14,17.58],[18.72,22.54]],[[1.38,7.86],[9.56,18.24],[19.48,28.12]],[[1.52,9.08],[10.64,21.92],[22.88,34.8]],[[1.92,11.94],[13.38,25.76],[27.16,40.68]]];
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const root = document.getElementById('memos');
+const $ = (s, r = document) => r.querySelector(s);
 const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
-
-// Deterministic waveform from the product name, so each memo has its own shape.
+const pad = n => String(n).padStart(2, '0');
+const fmt = s => Math.floor(s / 60) + ':' + pad(Math.floor(s % 60));
+const narrow = innerWidth < 640;
 function bars(seed, count) {
   let h = 0; for (const c of seed) h = (h * 31 + c.codePointAt(0)) >>> 0;
-  const out = [];
-  for (let i = 0; i < count; i++) {
-    h = (h * 1664525 + 1013904223) >>> 0;
-    const env = Math.sin((i / count) * Math.PI) * .55 + .45;
-    out.push(Math.max(.12, (h / 4294967295) * env));
-  }
-  return out;
+  return Array.from({ length: count }, (_, i) => { h = (h * 1664525 + 1013904223) >>> 0; return Math.max(.14, (h / 4294967295) * (Math.sin(i / count * Math.PI) * .55 + .45)); });
 }
+const PLAY = '<svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg><svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>';
 
-const ICONS = '<svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg><svg class="i-stop" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
+/* ---------- Hero: waveform, transcribed headline, recording clock ---------- */
+const hw = $('.hero-wave');
+bars('Prateek Mehta 2026', narrow ? 56 : 110).forEach((v, i) => { const b = el('i'); b.style.setProperty('--h', v); b.style.setProperty('--d', (i % 17) / 17 * 2.4); hw.append(b); });
+const hWords = [];
+document.querySelectorAll('.hero h1 .l').forEach(l => {
+  const target = l.querySelector('em') || l, words = target.textContent.split(' ');
+  target.textContent = '';
+  words.forEach((w, k) => { const s = el('span', 'w', w); target.append(s); if (k < words.length - 1) target.append(' '); hWords.push(s); });
+});
+const caret = el('span', 'caret'); caret.setAttribute('aria-hidden', 'true');
+if (reduced) hWords.forEach(w => w.classList.add('on'));
+else hWords.forEach((w, k) => setTimeout(() => { w.classList.add('on'); w.append(caret); }, 120 + k * 95));
+const clock = $('.rec-line .clock'), t0 = performance.now();
+setInterval(() => { const s = Math.floor((performance.now() - t0) / 1000); clock.textContent = pad(Math.floor(s / 60)) + ':' + pad(s % 60); }, 1000);
 
-let lastMonth = '';
-const cards = MEMOS.map((m, i) => {
-  if (m.month !== lastMonth) { root.append(el('div', 'month', m.month)); lastMonth = m.month; }
-  const card = el('article', 'memo');
-  const tid = 'memo-t-' + i;
-  const top = el('div', 'memo-top');
-  const btn = el('button', 'play');
-  btn.type = 'button';
-  btn.innerHTML = ICONS;
-  btn.setAttribute('aria-label', 'Play memo: ' + m.name);
-  btn.setAttribute('aria-expanded', 'false');
-  btn.setAttribute('aria-controls', tid);
-  const info = el('div');
-  const no = el('div', 'memo-no', 'MEMO ' + String(i + 1).padStart(2, '0'));
-  no.append(el('span', 'chip' + (m.status === 'Live' || m.status === 'Launched' ? ' live' : ''), m.status.toUpperCase()));
-  info.append(no, el('h2', null, m.name), el('div', 'kind', m.kind));
-  top.append(btn, info);
+/* ---------- Chapters ---------- */
+const root = $('#chapters');
+const chapters = MEMOS.map((m, i) => {
+  const ch = el('article', 'chapter' + (i % 2 ? ' flip' : ''));
+  ch.id = 'memo-' + pad(i + 1);
+  ch.setAttribute('aria-labelledby', ch.id + '-t');
+  const month = el('div', 'month'); month.innerHTML = `<div class="node">${pad(i + 1)}</div><span>${m.month}</span>`;
+  month.setAttribute('aria-hidden', 'true');
 
-  const wave = el('div', 'wave');
-  wave.setAttribute('aria-hidden', 'true');
-  const barEls = bars(m.name, window.innerWidth < 560 ? 48 : 72).map(v => { const b = el('i'); b.style.height = (v * 100) + '%'; wave.append(b); return b; });
+  const text = el('div', 'ch-text rv');
+  const meta = el('div', 'ch-meta mono'); meta.append('Memo ' + pad(i + 1) + ' · ' + m.month + ' 2026');
+  meta.append(el('span', 'chip' + (/^(Live|Launched)$/.test(m.status) ? ' live' : ''), m.status));
+  const h3 = el('h3', null, m.name); h3.id = ch.id + '-t';
+
+  const player = el('div', 'player');
+  const pbtn = el('button', 'pbtn'); pbtn.type = 'button'; pbtn.innerHTML = PLAY; pbtn.setAttribute('aria-label', 'Play memo ' + pad(i + 1) + ': ' + m.name);
+  const scrub = el('div', 'scrub');
+  scrub.setAttribute('role', 'slider'); scrub.tabIndex = 0;
+  scrub.setAttribute('aria-label', 'Seek in memo ' + pad(i + 1));
+  scrub.setAttribute('aria-valuemin', '0'); scrub.setAttribute('aria-valuemax', String(Math.round(DUR[i])));
+  scrub.setAttribute('aria-valuenow', '0'); scrub.setAttribute('aria-valuetext', '0:00 of ' + fmt(DUR[i]));
+  const barEls = bars(m.name, narrow ? 34 : 56).map(v => { const b = el('i'); b.style.setProperty('--h', v); scrub.append(b); return b; });
+  const time = el('span', 'time', '0:00 / ' + fmt(DUR[i]));
+  player.append(pbtn, scrub, time);
 
   const tr = el('div', 'transcript');
-  tr.id = tid;
-  const words = [], lines = [];
-  [['The problem', m.problem], ['What I did', m.did], ['What happened', m.result]].forEach(([label, text]) => {
-    const line = el('div', 't-line');
-    line.append(el('span', 't-label', label));
-    const p = el('p', 't-text');
-    const lw = [];
-    text.split(' ').forEach((w, k, arr) => { const s = el('span', 'w', w); p.append(s); if (k < arr.length - 1) p.append(' '); words.push(s); lw.push(s); });
-    line.append(p);
-    tr.append(line);
-    lines.push({ label, text, words: lw });
+  const lines = [['The problem', m.problem], ['What I did', m.did], ['What happened', m.result]].map(([label, body], j) => {
+    const d = el('div', 'tl' + (j === 2 ? ' result' : ''));
+    d.append(el('span', 'mono', label));
+    const p = el('p'), words = [];
+    body.split(' ').forEach((w, k, a) => { const s = el('span', 'w', w); p.append(s); if (k < a.length - 1) p.append(' '); words.push(s); });
+    d.append(p); tr.append(d);
+    return words;
   });
   const links = el('div', 'links');
   m.links.forEach(([label, href]) => { const a = el('a', null, label + ' ↗'); a.href = href; a.target = '_blank'; a.rel = 'noopener'; links.append(a); });
-  tr.append(links);
+  text.append(meta, h3, el('div', 'kind', m.kind), player, tr, links);
 
-  card.append(top, wave, tr);
-  root.append(card);
-  return { card, btn, barEls, words, lines };
+  const vis = el('div', 'ch-visual');
+  if (m.shot) {
+    const fig = el('figure'), frame = el('div', 'shot clip'), img = el('img');
+    img.src = m.shot; img.alt = 'Screenshot of ' + m.name; img.loading = 'lazy'; img.decoding = 'async'; img.width = 540; img.height = 980;
+    frame.append(img); fig.append(frame, el('figcaption', 'cap mono', m.cap)); vis.append(fig);
+  } else {
+    const t = el('div', 'typo rv'), ghost = el('div', 'ghost', pad(i + 1));
+    ghost.setAttribute('aria-hidden', 'true');
+    t.append(ghost, el('div', 'big', m.visual.big), el('p', 'lbl', m.visual.lbl), el('div', 'src mono', 'From memo ' + pad(i + 1)));
+    vis.append(t);
+  }
+  ch.append(month, text, vis);
+  root.append(ch);
+  return { i, m, ch, pbtn, scrub, barEls, time, lines, player };
 });
 
-let active = null, timer = null, queue = [], run = 0;
+/* ---------- Audio: one shared player, positions remembered per memo ---------- */
+const audio = new Audio();
+audio.preload = 'none';
+let cur = -1, playAll = false, pendingSeek = null, raf = 0, curVisible = true;
+const pos = MEMOS.map(() => 0);
+const mini = $('.mini'), miniBtn = $('.mini .pbtn'), miniTtl = $('.mini .ttl'), miniMeta = $('.mini .meta'), miniProg = $('.mini .prog b');
 
-// Recorded memos (audio/memo-01.mp3 ...). For each line: [seconds where the words start, seconds where the line ends].
-const TAPES = [[[1.48,5.72],[6.76,18.5],[18.98,27.54]],[[1.18,10.82],[11.84,18.52],[20,26.14]],[[1.4,11.82],[13.12,21.2],[22.42,30.14]],[[1.48,9.92],[11.32,20.68],[21.82,27.12]],[[1.72,7.96],[9.38,19.28],[20.66,28.26]],[[1.38,9.06],[10.14,17.58],[18.72,22.54]],[[1.38,7.86],[9.56,18.24],[19.48,28.12]],[[1.52,9.08],[10.64,21.92],[22.88,34.8]],[[1.92,11.94],[13.38,25.76],[27.16,40.68]]];
-const tape = new Audio();
-tape.preload = 'none';
-let raf = 0;
-
-// Fallback voice if a recording fails to load: the device's own, Indian English first.
-const synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
-let voice = null, soundOn = true;
-function pickVoice() {
-  const en = synth.getVoices().filter(v => /^en([-_]|$)/i.test(v.lang));
-  voice = ['IN', 'GB', 'US'].map(r => en.find(v => new RegExp('^en[-_]' + r, 'i').test(v.lang))).find(Boolean) || en[0] || null;
-}
-const soundBtn = document.querySelector('.sound');
-if (synth) { pickVoice(); synth.onvoiceschanged = pickVoice; }
-soundBtn.addEventListener('click', () => {
-  soundOn = !soundOn;
-  soundBtn.textContent = soundOn ? 'Sound on' : 'Sound off';
-  soundBtn.setAttribute('aria-pressed', String(soundOn));
-  if (!soundOn) { if (synth) synth.cancel(); tape.pause(); }
-});
-
-// Spoken form only: the transcript on screen stays exactly as written.
-const SAY = [[/₹3\.16 Cr/g, '3.16 crore rupees'], [/(\d)\+/g, '$1 plus'], [/\$0/g, 'zero dollars'], [/ \/ /g, ', '],
-  [/\bBOQs\b/g, 'B O Qs'], [/\bBOQ\b/g, 'B O Q'], [/\bPRD\b/g, 'P R D'], [/\bQA\b/g, 'Q A'], [/\bCRMs\b/g, 'C R Ms'], [/\bCRM\b/g, 'C R M']];
-const spoken = t => SAY.reduce((s, [re, to]) => s.replace(re, to), t);
-
-function light(c) {
-  const said = c.words.filter(w => w.classList.contains('said')).length;
-  const lit = Math.round((said / c.words.length) * c.barEls.length);
+function render(i, t) {
+  const c = chapters[i], d = DUR[i];
+  const lit = Math.round(Math.min(1, t / d) * c.barEls.length);
   c.barEls.forEach((b, j) => b.classList.toggle('on', j < lit));
+  c.time.textContent = fmt(Math.min(t, d)) + ' / ' + fmt(d);
+  c.scrub.setAttribute('aria-valuenow', String(Math.round(t)));
+  c.scrub.setAttribute('aria-valuetext', fmt(t) + ' of ' + fmt(d));
+  TAPES[i].forEach(([a, b], j) => {
+    const words = c.lines[j], n = Math.round(Math.min(1, Math.max(0, (t - a) / (b - a))) * words.length);
+    words.forEach((w, k) => w.classList.toggle('said', k < n));
+  });
+  if (i === cur) miniProg.style.width = Math.min(100, t / d * 100) + '%';
 }
-
-function stop(finish) {
-  run++;
-  clearInterval(timer); timer = null;
+function updateMini() { mini.classList.toggle('show', cur >= 0 && !curVisible && (!audio.paused || pos[cur] > 0)); }
+function setPlaying(on) {
+  chapters.forEach(c => {
+    const me = c.i === cur && on;
+    c.ch.classList.toggle('is-playing', me);
+    c.pbtn.setAttribute('aria-label', (me ? 'Pause' : 'Play') + ' memo ' + pad(c.i + 1) + ': ' + c.m.name);
+  });
+  mini.classList.toggle('is-playing', on);
+  miniBtn.setAttribute('aria-label', on ? 'Pause' : 'Play');
   cancelAnimationFrame(raf);
-  tape.pause(); tape.onended = tape.onerror = null;
-  if (synth) synth.cancel();
-  if (!active) return;
-  active.card.classList.remove('is-playing');
-  active.btn.setAttribute('aria-label', 'Play memo again');
-  if (finish) { active.words.forEach(w => w.classList.add('said')); active.barEls.forEach(b => b.classList.add('on')); }
-  active = null;
+  if (on) { const tick = () => { render(cur, audio.currentTime || 0); raf = requestAnimationFrame(tick); }; tick(); }
+  updateMini();
 }
-
-// Silent playback: words appear at a steady pace.
-function playSilent(c, id) {
-  let k = 0;
-  timer = setInterval(() => {
-    if (id !== run) return;
-    if (k < c.words.length) c.words[k].classList.add('said');
-    k++; light(c);
-    if (k >= c.words.length) { stop(true); next(); }
-  }, 140);
+function select(i) {
+  if (cur === i) return;
+  if (cur >= 0) { if (!audio.paused || audio.currentTime) pos[cur] = audio.currentTime; chapters[cur].ch.classList.remove('is-current'); }
+  cur = i;
+  const c = chapters[i];
+  c.ch.classList.add('is-current', 'is-tracking');
+  c.ch.querySelector('.unavailable')?.remove();
+  miniTtl.textContent = c.m.name;
+  miniMeta.textContent = 'Memo ' + pad(i + 1) + ' · ' + c.m.month + ' 2026';
+  pendingSeek = pos[i];
+  audio.src = 'audio/memo-' + pad(i + 1) + '.mp3';
+  checkVisible();
 }
-
-// Spoken playback: one utterance per line. Word boundaries drive the highlight
-// where the engine reports them; otherwise an estimate keeps pace, and a
-// watchdog moves on if an engine never reports the end of a line.
-function playSpoken(c, id) {
-  const lines = c.lines.slice();
-  const nextLine = () => {
-    if (id !== run) return;
-    const L = lines.shift();
-    if (!L) { stop(true); next(); return; }
-    const head = L.label + '. ', body = spoken(L.text), say = head + body;
-    const u = new SpeechSynthesisUtterance(say);
-    u.voice = voice; u.lang = voice.lang; u.rate = 1;
-    const mark = frac => { const n = Math.round(Math.min(1, Math.max(0, frac)) * L.words.length); L.words.forEach((w, j) => j < n && w.classList.add('said')); light(c); };
-    let gotBoundary = false, done = false, t0 = 0;
-    const est = setInterval(() => { if (!gotBoundary && t0) mark((Date.now() - t0 - 700) / (body.length * 62)); }, 120);
-    const finish = () => { if (done) return; done = true; clearInterval(est); clearTimeout(watch); if (id !== run) return; mark(1); nextLine(); };
-    const watch = setTimeout(finish, 3000 + say.length * 110);
-    u.onstart = () => { t0 = Date.now(); };
-    setTimeout(() => { if (!t0) t0 = Date.now(); }, 1500);
-    u.onboundary = e => { if (e.name && e.name !== 'word') return; gotBoundary = true; mark((e.charIndex - head.length) / body.length); };
-    u.onend = finish; u.onerror = finish;
-    synth.speak(u);
-  };
-  nextLine();
+function seek(t) { if (audio.readyState >= 1) { audio.currentTime = t; pendingSeek = null; } else pendingSeek = t; }
+function start(i, at) {
+  select(i);
+  if (at != null) pos[i] = at;
+  if (pos[i] >= DUR[i] - .3) pos[i] = 0;
+  seek(pos[i]);
+  render(i, pos[i]);
+  const p = audio.play();
+  if (p && p.catch) p.catch(e => { if (e.name !== 'AbortError') setPlaying(false); });
 }
-
-// Recorded playback: the words follow the recording's line timings.
-function playTape(c, id, i) {
-  const fallback = () => { if (id !== run) return; tape.onended = tape.onerror = null; (synth && voice) ? playSpoken(c, id) : playSilent(c, id); };
-  tape.src = 'audio/memo-' + String(i + 1).padStart(2, '0') + '.mp3';
-  tape.onerror = fallback;
-  tape.onended = () => { if (id !== run) return; stop(true); next(); };
-  const tick = () => {
-    if (id !== run) return;
-    const t = tape.currentTime;
-    TAPES[i].forEach(([a, b], j) => {
-      const L = c.lines[j], n = Math.round(Math.min(1, Math.max(0, (t - a) / (b - a))) * L.words.length);
-      L.words.forEach((w, k) => w.classList.toggle('said', k < n));
-    });
-    light(c);
-    raf = requestAnimationFrame(tick);
-  };
-  const p = tape.play();
-  if (p && p.catch) p.catch(fallback);
-  raf = requestAnimationFrame(tick);
+function toggle(i) {
+  if (cur === i && !audio.paused) { audio.pause(); return; }
+  playAll = false;
+  start(i);
 }
-
-function play(c) {
-  stop(true);
-  const id = run;
-  active = c;
-  c.card.classList.add('is-open', 'is-playing');
-  c.btn.setAttribute('aria-expanded', 'true');
-  c.btn.setAttribute('aria-label', 'Stop memo');
-  c.words.forEach(w => w.classList.remove('said'));
-  c.barEls.forEach(b => b.classList.remove('on'));
-  const i = cards.indexOf(c);
-  if (soundOn && TAPES[i]) return playTape(c, id, i);
-  if (soundOn && synth && voice) return playSpoken(c, id);
-  if (reduced) { stop(true); return next(); }
-  playSilent(c, id);
+function advance(i) {
+  chapters[i].ch.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+  setTimeout(() => { if (playAll) start(i, 0); }, reduced ? 0 : 500);
 }
+audio.addEventListener('loadedmetadata', () => { if (pendingSeek != null) { audio.currentTime = pendingSeek; pendingSeek = null; } });
+audio.addEventListener('play', () => setPlaying(true));
+audio.addEventListener('pause', () => { if (cur >= 0 && !audio.ended) { pos[cur] = audio.currentTime; render(cur, audio.currentTime); } setPlaying(false); });
+audio.addEventListener('seeked', () => cur >= 0 && render(cur, audio.currentTime));
+audio.addEventListener('ended', () => {
+  const i = cur; pos[i] = 0; render(i, DUR[i]); setPlaying(false);
+  if (playAll && i < MEMOS.length - 1) advance(i + 1); else playAll = false;
+});
+audio.addEventListener('error', () => {
+  if (cur < 0 || !audio.getAttribute('src')) return;
+  const c = chapters[cur];
+  if (!c.ch.querySelector('.unavailable')) c.player.after(el('p', 'unavailable', 'This recording could not load. The transcript below has every word.'));
+  c.ch.classList.remove('is-tracking');
+  setPlaying(false);
+  if (playAll && cur < MEMOS.length - 1) advance(cur + 1); else playAll = false;
+});
 
-function next() {
-  if (!queue.length) return;
-  const c = queue.shift();
-  c.card.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
-  setTimeout(() => play(c), reduced ? 0 : 450);
-}
-
-cards.forEach(c => c.btn.addEventListener('click', () => {
-  queue = [];
-  if (active === c) { stop(true); return; }
-  play(c);
+/* Play buttons, Play all, scrubbing (pointer and keyboard) */
+chapters.forEach(c => {
+  c.pbtn.addEventListener('click', () => toggle(c.i));
+  const at = e => { const r = c.scrub.getBoundingClientRect(); return Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * DUR[c.i]; };
+  let dragging = false;
+  c.scrub.addEventListener('pointerdown', e => {
+    dragging = true; c.scrub.setPointerCapture(e.pointerId);
+    const t = at(e);
+    playAll = false;
+    if (cur === c.i) { pos[c.i] = t; seek(t); render(c.i, t); if (audio.paused) start(c.i); }
+    else start(c.i, t);
+  });
+  c.scrub.addEventListener('pointermove', e => { if (!dragging || cur !== c.i) return; const t = at(e); pos[c.i] = t; seek(t); render(c.i, t); });
+  const end = () => { dragging = false; };
+  c.scrub.addEventListener('pointerup', end); c.scrub.addEventListener('pointercancel', end);
+  c.scrub.addEventListener('keydown', e => {
+    const step = { ArrowRight: 5, ArrowUp: 5, ArrowLeft: -5, ArrowDown: -5 }[e.key];
+    if (e.key === 'Home' || e.key === 'End' || step) {
+      e.preventDefault();
+      const base = cur === c.i ? audio.currentTime : pos[c.i];
+      const t = e.key === 'Home' ? 0 : e.key === 'End' ? DUR[c.i] - .5 : Math.min(DUR[c.i] - .2, Math.max(0, base + step));
+      pos[c.i] = t;
+      if (cur === c.i) seek(t);
+      c.ch.classList.add('is-tracking');
+      render(c.i, t);
+    } else if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(c.i); }
+  });
+});
+document.querySelectorAll('[data-playall]').forEach(b => b.addEventListener('click', () => {
+  playAll = true;
+  pos.fill(0);
+  chapters[0].ch.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+  start(0, 0);
 }));
 
-document.querySelector('.play-all').addEventListener('click', () => {
-  queue = cards.slice();
-  next();
+/* Mini player: shows when the current memo is off screen */
+miniBtn.addEventListener('click', () => { if (cur < 0) return; if (audio.paused) start(cur); else audio.pause(); });
+$('.mini .jump').addEventListener('click', () => cur >= 0 && chapters[cur].ch.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' }));
+function checkVisible() {
+  if (cur < 0) return;
+  const r = chapters[cur].player.getBoundingClientRect();
+  curVisible = r.bottom > 0 && r.top < innerHeight;
+  updateMini();
+}
+
+/* ---------- Scroll: active chapter, timeline drawing, hero wave ---------- */
+const spineFill = $('.spine b'), timeline = $('.timeline');
+const io = 'IntersectionObserver' in window;
+if (io) {
+  const active = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) chapters.forEach(x => x.ch.classList.toggle('is-active', x.ch === e.target));
+  }), { rootMargin: '-45% 0px -45% 0px' });
+  chapters.forEach(c => active.observe(c.ch));
+  const reveal = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); reveal.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
+  document.querySelectorAll('.rv, .clip').forEach(n => reveal.observe(n));
+} else document.querySelectorAll('.rv, .clip').forEach(n => n.classList.add('in'));
+let ticking = false;
+function onScroll() {
+  ticking = false;
+  const r = timeline.getBoundingClientRect();
+  spineFill.style.setProperty('--p', Math.min(1, Math.max(0, (innerHeight * .6 - r.top) / r.height)).toFixed(4));
+  const hp = Math.min(1, Math.max(0, scrollY / (innerHeight * .8)));
+  hw.style.transform = `scaleY(${(1 - hp * .85).toFixed(3)})`;
+  hw.style.opacity = (1 - hp * .6).toFixed(3);
+  checkVisible();
+}
+addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+addEventListener('resize', onScroll);
+onScroll();
+
+/* ---------- Flow insights: counters, streak, bars ---------- */
+const streak = $('.streak');
+for (let k = 0; k < 36; k++) streak.append(el('i'));
+// Counts and percentage shares exactly as the Insights card shows them. Bar length follows Flow's percentage, not the count.
+const WHERE = [['AI prompts', 2081, 68], ['other tasks', 480, 15], ['documents', 48, 13], ['personal messages', 107, 3], ['work messages', 36, 1], ['emails', 2, 0]];
+WHERE.forEach(([l, v, pct]) => {
+  const b = el('div', 'bar');
+  b.append(el('span', 'l', v.toLocaleString('en-US') + ' ' + l), el('span', 'v', pct + '%'));
+  const t = el('span', 't'), fill = el('b'); fill.dataset.v = pct; t.append(fill); b.append(t);
+  $('#bars').append(b);
 });
+function countUp(n) {
+  const to = +n.dataset.count, dur = 1600, s = performance.now();
+  const step = now => { const p = Math.min(1, (now - s) / dur), e = 1 - Math.pow(1 - p, 3); n.textContent = Math.round(to * e).toLocaleString('en-US'); if (p < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}
+function fillFlow(animate) {
+  if (animate) document.querySelectorAll('#flow [data-count]').forEach(countUp);
+  [...streak.children].forEach((d, k) => animate ? setTimeout(() => d.classList.add('on'), 300 + k * 45) : d.classList.add('on'));
+  document.querySelectorAll('.split b').forEach(b => b.style.width = (b.dataset.w / 4265 * 100) + '%');
+  document.querySelectorAll('.bar .t b').forEach(b => b.style.width = Math.max(.8, b.dataset.v / 68 * 100) + '%');
+}
+if (io && !reduced) {
+  const f = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { fillFlow(true); f.disconnect(); } }, { threshold: .15 });
+  f.observe($('.hero-stat'));
+} else fillFlow(false);
+
+/* ---------- Closing waveform settles ---------- */
+const ew = $('.end-wave');
+bars('Memo 10 is yours', narrow ? 50 : 100).forEach((v, i, a) => { const b = el('i'); b.style.setProperty('--h', v); b.style.setProperty('--d', i / a.length); ew.append(b); });
+if (io && !reduced) {
+  const s = new IntersectionObserver(es => { if (es[0].isIntersecting) { ew.classList.add('settle'); s.disconnect(); } }, { threshold: .6 });
+  s.observe(ew);
+} else ew.classList.add('settle');
 </script>
 </body>
 </html>
