@@ -179,7 +179,7 @@
   </header>
 
   <main>
-    <div class="list-head"><span>All memos · 9</span><span class="controls"><button class="sound" type="button" aria-pressed="true" hidden>Sound on</button><button class="play-all" type="button">Play all ▸</button></span></div>
+    <div class="list-head"><span>All memos · 9</span><span class="controls"><button class="sound" type="button" aria-pressed="true">Sound on</button><button class="play-all" type="button">Play all ▸</button></span></div>
 
     <!-- Memos are rendered from MEMOS below; this noscript keeps every word readable without JS. -->
     <div id="memos"></div>
@@ -313,13 +313,18 @@ const cards = MEMOS.map((m, i) => {
 
 let active = null, timer = null, queue = [], run = 0;
 
-// Read aloud with the device's own voice (free, no audio files). Indian English first.
+// Recorded memos (audio/memo-01.mp3 ...). For each line: [seconds where the words start, seconds where the line ends].
+const TAPES = [[[1.48,5.72],[6.76,18.5],[18.98,27.54]],[[1.18,10.82],[11.84,18.52],[20,26.14]],[[1.4,11.82],[13.12,21.2],[22.42,30.14]],[[1.48,9.92],[11.32,20.68],[21.82,27.12]],[[1.72,7.96],[9.38,19.28],[20.66,28.26]],[[1.38,9.06],[10.14,17.58],[18.72,22.54]],[[1.38,7.86],[9.56,18.24],[19.48,28.12]],[[1.52,9.08],[10.64,21.92],[22.88,34.8]],[[1.92,11.94],[13.38,25.76],[27.16,40.68]]];
+const tape = new Audio();
+tape.preload = 'none';
+let raf = 0;
+
+// Fallback voice if a recording fails to load: the device's own, Indian English first.
 const synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
 let voice = null, soundOn = true;
 function pickVoice() {
   const en = synth.getVoices().filter(v => /^en([-_]|$)/i.test(v.lang));
   voice = ['IN', 'GB', 'US'].map(r => en.find(v => new RegExp('^en[-_]' + r, 'i').test(v.lang))).find(Boolean) || en[0] || null;
-  soundBtn.hidden = !voice;
 }
 const soundBtn = document.querySelector('.sound');
 if (synth) { pickVoice(); synth.onvoiceschanged = pickVoice; }
@@ -327,7 +332,7 @@ soundBtn.addEventListener('click', () => {
   soundOn = !soundOn;
   soundBtn.textContent = soundOn ? 'Sound on' : 'Sound off';
   soundBtn.setAttribute('aria-pressed', String(soundOn));
-  if (!soundOn && synth) synth.cancel();
+  if (!soundOn) { if (synth) synth.cancel(); tape.pause(); }
 });
 
 // Spoken form only: the transcript on screen stays exactly as written.
@@ -344,6 +349,8 @@ function light(c) {
 function stop(finish) {
   run++;
   clearInterval(timer); timer = null;
+  cancelAnimationFrame(raf);
+  tape.pause(); tape.onended = tape.onerror = null;
   if (synth) synth.cancel();
   if (!active) return;
   active.card.classList.remove('is-playing');
@@ -389,6 +396,27 @@ function playSpoken(c, id) {
   nextLine();
 }
 
+// Recorded playback: the words follow the recording's line timings.
+function playTape(c, id, i) {
+  const fallback = () => { if (id !== run) return; tape.onended = tape.onerror = null; (synth && voice) ? playSpoken(c, id) : playSilent(c, id); };
+  tape.src = 'audio/memo-' + String(i + 1).padStart(2, '0') + '.mp3';
+  tape.onerror = fallback;
+  tape.onended = () => { if (id !== run) return; stop(true); next(); };
+  const tick = () => {
+    if (id !== run) return;
+    const t = tape.currentTime;
+    TAPES[i].forEach(([a, b], j) => {
+      const L = c.lines[j], n = Math.round(Math.min(1, Math.max(0, (t - a) / (b - a))) * L.words.length);
+      L.words.forEach((w, k) => w.classList.toggle('said', k < n));
+    });
+    light(c);
+    raf = requestAnimationFrame(tick);
+  };
+  const p = tape.play();
+  if (p && p.catch) p.catch(fallback);
+  raf = requestAnimationFrame(tick);
+}
+
 function play(c) {
   stop(true);
   const id = run;
@@ -398,6 +426,8 @@ function play(c) {
   c.btn.setAttribute('aria-label', 'Stop memo');
   c.words.forEach(w => w.classList.remove('said'));
   c.barEls.forEach(b => b.classList.remove('on'));
+  const i = cards.indexOf(c);
+  if (soundOn && TAPES[i]) return playTape(c, id, i);
   if (soundOn && synth && voice) return playSpoken(c, id);
   if (reduced) { stop(true); return next(); }
   playSilent(c, id);
