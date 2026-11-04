@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prateek Mehta · Voice Memos, 2026</title>
+<meta name="description" content="Nine products Prateek Mehta built in 2026, told as nine voice memos.">
+<meta property="og:title" content="Prateek Mehta · Voice Memos, 2026">
+<meta property="og:description" content="Nine products built in 2026, told as nine voice memos.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='%23e8432e'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f3eee4;
+    --card: #fbf8f2;
+    --ink: #1d1b18;
+    --muted: #6e675c;
+    --line: #ddd5c6;
+    --rec: #e8432e;
+    --rec-soft: #f6d5cc;
+    --wave: #c9bfae;
+    --display: 'Bricolage Grotesque', Georgia, serif;
+    --serif: 'Instrument Serif', Georgia, serif;
+    --mono: 'DM Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font: 400 17px/1.6 var(--display);
+    background-image: radial-gradient(rgba(29,27,24,.05) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  a { color: inherit; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 22px; }
+
+  /* Header */
+  header { padding: 72px 0 40px; }
+  .status {
+    display: inline-flex; align-items: center; gap: 10px;
+    font: 500 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--rec); animation: blink 1.6s ease-in-out infinite; }
+  @keyframes blink { 50% { opacity: .25; } }
+  h1 {
+    margin-top: 26px;
+    font: 800 clamp(44px, 9vw, 84px)/.95 var(--display);
+    letter-spacing: -.035em;
+  }
+  h1 em { font: italic 400 1.05em/1 var(--serif); letter-spacing: -.01em; color: var(--rec); }
+  .lede { margin-top: 26px; max-width: 34em; font-size: 19px; color: #3a3630; }
+  .lede strong { font-weight: 600; color: var(--ink); }
+  .meta-row {
+    margin-top: 30px; display: flex; flex-wrap: wrap; gap: 8px 22px;
+    font: 400 13px/1.4 var(--mono); color: var(--muted);
+  }
+  .meta-row a { text-decoration: none; border-bottom: 1px solid var(--line); }
+  .meta-row a:hover { border-color: var(--rec); color: var(--ink); }
+
+  /* Memo list */
+  .list-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 18px 0 10px; border-bottom: 1.5px solid var(--ink);
+    font: 500 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase;
+  }
+  .play-all {
+    font: 500 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase;
+    background: none; border: 0; color: var(--rec); cursor: pointer; padding: 6px 0;
+  }
+  .play-all:hover { text-decoration: underline; }
+  .month {
+    padding: 34px 0 8px;
+    font: italic 400 26px/1 var(--serif); color: var(--muted);
+  }
+  .memo {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    margin: 12px 0;
+    padding: 20px 22px 18px;
+    transition: border-color .3s, box-shadow .3s;
+  }
+  .memo.is-open { border-color: var(--ink); box-shadow: 0 10px 30px -18px rgba(29,27,24,.45); }
+  .memo-top { display: grid; grid-template-columns: 52px 1fr; gap: 16px; align-items: center; }
+  .play {
+    width: 52px; height: 52px; border-radius: 50%;
+    border: 1.5px solid var(--ink); background: transparent; cursor: pointer;
+    display: grid; place-items: center; transition: background .2s, transform .15s;
+  }
+  .play:hover { background: var(--rec-soft); }
+  .play:active { transform: scale(.94); }
+  .play:focus-visible, .play-all:focus-visible, a:focus-visible { outline: 2px solid var(--rec); outline-offset: 3px; }
+  .play svg { width: 18px; height: 18px; fill: var(--ink); }
+  .play .i-stop { display: none; }
+  .memo.is-playing .play { background: var(--rec); border-color: var(--rec); }
+  .memo.is-playing .play svg { fill: #fff; }
+  .memo.is-playing .i-play { display: none; }
+  .memo.is-playing .i-stop { display: block; }
+  .memo-no { font: 500 12px/1 var(--mono); letter-spacing: .1em; color: var(--muted); }
+  .memo-no .chip {
+    margin-left: 8px; padding: 3px 7px; border-radius: 99px; border: 1px solid var(--line);
+    font-size: 10.5px; letter-spacing: .12em;
+  }
+  .chip.live { border-color: #8bb08a; color: #3f6b3e; }
+  .memo h2 { margin-top: 6px; font: 600 22px/1.2 var(--display); letter-spacing: -.015em; }
+  .memo .kind { font-size: 14.5px; color: var(--muted); margin-top: 2px; }
+
+  .wave { margin: 16px 0 0 68px; height: 34px; display: flex; align-items: center; gap: 2px; }
+  .wave i { flex: 1; min-width: 2px; border-radius: 2px; background: var(--wave); transition: background .12s; }
+  .wave i.on { background: var(--rec); }
+
+  .transcript { margin: 18px 0 2px 68px; display: none; }
+  .memo.is-open .transcript { display: block; }
+  .t-line { margin-bottom: 14px; }
+  .t-label { display: block; font: 500 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .t-text { font-size: 17.5px; line-height: 1.55; }
+  .t-text .w { opacity: .14; transition: opacity .18s; }
+  .t-text .w.said { opacity: 1; }
+  .links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+  .links a {
+    font: 500 12.5px/1 var(--mono); text-decoration: none;
+    padding: 9px 12px; border-radius: 99px; border: 1px solid var(--ink);
+    transition: background .2s, color .2s;
+  }
+  .links a:hover { background: var(--ink); color: var(--card); }
+
+  /* Closing */
+  .closing { padding: 70px 0 30px; }
+  .closing h3 { font: 800 clamp(30px, 6vw, 46px)/1.02 var(--display); letter-spacing: -.03em; }
+  .closing h3 em { font: italic 400 1.05em/1 var(--serif); color: var(--rec); }
+  .closing p { margin-top: 16px; max-width: 34em; color: #3a3630; }
+  .contact { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .contact a {
+    font: 500 14px/1 var(--mono); text-decoration: none; padding: 13px 18px; border-radius: 99px;
+    border: 1.5px solid var(--ink);
+  }
+  .contact a.primary { background: var(--ink); color: var(--paper); }
+  .contact a:hover { background: var(--rec); border-color: var(--rec); color: #fff; }
+  footer { padding: 40px 0 60px; font: 400 12px/1.6 var(--mono); color: var(--muted); }
+
+  /* Load-in */
+  .rise { opacity: 0; transform: translateY(14px); animation: rise .7s cubic-bezier(.2,.7,.2,1) forwards; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+
+  @media (max-width: 560px) {
+    body { font-size: 16px; }
+    header { padding: 48px 0 28px; }
+    .memo { padding: 16px 16px 14px; border-radius: 14px; }
+    .memo-top { grid-template-columns: 44px 1fr; gap: 12px; }
+    .play { width: 44px; height: 44px; }
+    .wave, .transcript { margin-left: 0; }
+    .memo h2 { font-size: 19px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dot, .rise { animation: none; opacity: 1; transform: none; }
+    .t-text .w { opacity: 1; transition: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="status rise"><span class="dot" aria-hidden="true"></span>Voice Memos · 2026</div>
+    <h1 class="rise" style="animation-delay:.08s">Nine things<br>I built, <em>said out loud.</em></h1>
+    <p class="lede rise" style="animation-delay:.16s">Eight years fixing systems in banking and insurance. <strong>In 2026 I started building them.</strong> These are the nine products, one memo each: the problem, what I did, and what happened. Press play.</p>
+    <div class="meta-row rise" style="animation-delay:.24s">
+      <span>Prateek Mehta</span>
+      <span>Mumbai</span>
+      <a href="https://proisback.github.io/my-portfolio/">Full career story</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="list-head"><span>All memos · 9</span><button class="play-all" type="button">Play all ▸</button></div>
+
+    <!-- Memos are rendered from MEMOS below; this noscript keeps every word readable without JS. -->
+    <div id="memos"></div>
+    <noscript><p style="padding:20px 0">Turn on JavaScript to play the memos, or read the full case studies at <a href="https://proisback.github.io/my-portfolio/">proisback.github.io/my-portfolio</a>.</p></noscript>
+
+    <section class="closing">
+      <h3>Memo 10 is <em>yours.</em></h3>
+      <p>I start with the people, not the feature: interviews and surveys first, then a build measured in days, then one number that says whether it worked.</p>
+      <div class="contact">
+        <a class="primary" href="mailto:prateek.milestoneindia@gmail.com">Email me</a>
+        <a href="https://www.linkedin.com/in/prateek-mehta-xlri/">LinkedIn</a>
+        <a href="https://proisback.github.io/my-portfolio/">Full portfolio</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>Dictated with Wispr Flow. Built with Claude Code. November 2026.</footer>
+</div>
+
+<script>
+const CS = 'https://proisback.github.io/my-portfolio/';
+const MEMOS = [
+  { month: 'February', name: 'StoreOps Peak-Hour Decision Support', status: 'Prototype', kind: 'Blinkit dark stores · Group project',
+    problem: "Blinkit store managers can't see their pickers during the 6 to 10 PM peak.",
+    did: 'Co-authored the PRD in a 4-person PM squad, from 392 reviews, 11 first-person accounts and a store-manager interview.',
+    result: 'Surfaced an estimated ₹3.16 Cr per store in annual margin loss, plus a one-tap fix.',
+    links: [['Case study', CS + 'work/storeops/'], ['Prototype', 'https://blinkit-alert-buddy.lovable.app']] },
+  { month: 'March', name: 'Signal', status: 'Prototype', kind: 'Intelligence layer for founder CRM · Group project',
+    problem: 'CRMs are built for salespeople. Early-stage founders lose deals to silence, not rejection.',
+    did: 'Co-authored the PRD after 6 founder interviews and 80+ sources on CRM adoption.',
+    result: "A prototype that reads a founder's channels and ranks 3 to 5 deals to act on each day.",
+    links: [['Case study', CS + 'work/signal/'], ['Prototype', 'https://signalaicrm.lovable.app']] },
+  { month: 'March', name: 'PMPathfinder', status: 'Live', kind: 'Career navigation for aspiring PMs · Solo',
+    problem: 'Aspiring PMs have no readiness signal. 84% get no feedback, or only vague feedback.',
+    did: 'A 38-person survey and 6 interviews, then a 3-stage AI-scored platform.',
+    result: 'Live, with all 7 Must-haves shipped: a Ready / Almost / Not Yet read against any real JD.',
+    links: [['Case study', CS + 'work/pmpathfinder/'], ['Live site', 'https://pmpathfinder-psi.vercel.app/']] },
+  { month: 'March', name: 'Bhojan', status: 'Live', kind: 'Weekly meal planner for Indian families · Solo',
+    problem: '"Aaj kya banayein?" In a joint family of six, that\'s 1,095 meal decisions a year.',
+    did: 'Built a suggestion-first planner after one interview flipped the design.',
+    result: 'Shipped in 4 days on $0 infrastructure, with no prior coding background.',
+    links: [['Case study', CS + 'work/bhojan/'], ['Live site', 'https://bhojan-beta.vercel.app']] },
+  { month: 'April', name: 'Plan Karo Chalo', status: 'Live', kind: 'Group trip coordination · Solo',
+    problem: '35% of planned group trips never happen. They die in the WhatsApp chaos before anyone books.',
+    did: '132+ research data points (27 interviews, 105 surveys), then built it solo in 8 days.',
+    result: '91.7% member activation in production.',
+    links: [['Case study', CS + 'work/plan-karo-chalo/'], ['Live site', 'https://plankarochalo.vercel.app']] },
+  { month: 'April', name: 'galpals', status: 'Live', kind: 'Women-only friendship app for Bangalore · Founding PM, team of 6',
+    problem: 'Women new to a city, or whose circle has thinned, have no good tool for finding real friends.',
+    did: 'Led discovery, wrote the PRD, designed every page and ran QA on a 6-person Buildathon team.',
+    result: 'Blank page to a Product Hunt launch in 4 days.',
+    links: [['Case study', CS + 'work/galpals/'], ['Live site', 'https://galpal.in/']] },
+  { month: 'September', name: 'Hitaarth', status: 'Launched', kind: 'A daily reading practice in English and Hindi · Solo',
+    problem: 'Feeds give endless information and almost nothing that stays.',
+    did: 'Built a daily practice: one idea, what it means, and one small action, in 4 languages.',
+    result: '669 hand-picked ideas, launched September 2026.',
+    links: [['Case study', CS + 'work/hitaarth/'], ['Live app', 'https://the-awakening-quotes-app.vercel.app/']] },
+  { month: 'October', name: 'RepLedger', status: 'Live', kind: 'Phone-first operating system for small gyms · Solo',
+    problem: "A gym's notebook doesn't say who owes money, whose plan is about to expire, or who has quietly stopped coming.",
+    did: 'Built a phone-first gym app in one week: dues, part-payments, renewals, QR check-ins and one-tap WhatsApp reminders.',
+    result: 'Designed so an owner sees who owes, who is lapsing and who stopped coming, and acts in one tap.',
+    links: [['Case study', CS + 'work/repledger/'], ['Live demo', 'https://repledger-demo.vercel.app/']] },
+  { month: 'November', name: 'BOQ से Quote तक', status: 'Prototype', kind: 'Showroom quoting for tiles and sanitaryware · Solo',
+    problem: 'Customers send the same BOQ to several showrooms. The one that gives useful answers early has a better chance of the next conversation.',
+    did: 'Built a phone-first flow: AI-assisted BOQ parsing with catalogue-only matching, Good, Better and Best options on WhatsApp, and a booked visit.',
+    result: 'Designed to turn a BOQ into a showroom visit, measured by one number: BOQs that become visits.',
+    links: [['Case study', CS + 'work/boq-se-quote/'], ['Working concept', 'https://boq-se-quote.vercel.app/']] },
+];
+
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const root = document.getElementById('memos');
+const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+
+// Deterministic waveform from the product name, so each memo has its own shape.
+function bars(seed, count) {
+  let h = 0; for (const c of seed) h = (h * 31 + c.codePointAt(0)) >>> 0;
+  const out = [];
+  for (let i = 0; i < count; i++) {
+    h = (h * 1664525 + 1013904223) >>> 0;
+    const env = Math.sin((i / count) * Math.PI) * .55 + .45;
+    out.push(Math.max(.12, (h / 4294967295) * env));
+  }
+  return out;
+}
+
+const ICONS = '<svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg><svg class="i-stop" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
+
+let lastMonth = '';
+const cards = MEMOS.map((m, i) => {
+  if (m.month !== lastMonth) { root.append(el('div', 'month', m.month)); lastMonth = m.month; }
+  const card = el('article', 'memo');
+  const tid = 'memo-t-' + i;
+  const top = el('div', 'memo-top');
+  const btn = el('button', 'play');
+  btn.type = 'button';
+  btn.innerHTML = ICONS;
+  btn.setAttribute('aria-label', 'Play memo: ' + m.name);
+  btn.setAttribute('aria-expanded', 'false');
+  btn.setAttribute('aria-controls', tid);
+  const info = el('div');
+  const no = el('div', 'memo-no', 'MEMO ' + String(i + 1).padStart(2, '0'));
+  no.append(el('span', 'chip' + (m.status === 'Live' || m.status === 'Launched' ? ' live' : ''), m.status.toUpperCase()));
+  info.append(no, el('h2', null, m.name), el('div', 'kind', m.kind));
+  top.append(btn, info);
+
+  const wave = el('div', 'wave');
+  wave.setAttribute('aria-hidden', 'true');
+  const barEls = bars(m.name, window.innerWidth < 560 ? 48 : 72).map(v => { const b = el('i'); b.style.height = (v * 100) + '%'; wave.append(b); return b; });
+
+  const tr = el('div', 'transcript');
+  tr.id = tid;
+  const words = [];
+  [['The problem', m.problem], ['What I did', m.did], ['What happened', m.result]].forEach(([label, text]) => {
+    const line = el('div', 't-line');
+    line.append(el('span', 't-label', label));
+    const p = el('p', 't-text');
+    text.split(' ').forEach((w, k, arr) => { const s = el('span', 'w', w); p.append(s); if (k < arr.length - 1) p.append(' '); words.push(s); });
+    line.append(p);
+    tr.append(line);
+  });
+  const links = el('div', 'links');
+  m.links.forEach(([label, href]) => { const a = el('a', null, label + ' ↗'); a.href = href; a.target = '_blank'; a.rel = 'noopener'; links.append(a); });
+  tr.append(links);
+
+  card.append(top, wave, tr);
+  root.append(card);
+  return { card, btn, barEls, words };
+});
+
+let active = null, timer = null, queue = [];
+
+function stop(finish) {
+  clearInterval(timer); timer = null;
+  if (!active) return;
+  active.card.classList.remove('is-playing');
+  active.btn.setAttribute('aria-label', 'Play memo again');
+  if (finish) { active.words.forEach(w => w.classList.add('said')); active.barEls.forEach(b => b.classList.add('on')); }
+  active = null;
+}
+
+function play(c) {
+  stop(true);
+  active = c;
+  c.card.classList.add('is-open', 'is-playing');
+  c.btn.setAttribute('aria-expanded', 'true');
+  c.btn.setAttribute('aria-label', 'Stop memo');
+  c.words.forEach(w => w.classList.remove('said'));
+  c.barEls.forEach(b => b.classList.remove('on'));
+  if (reduced) { stop(true); return next(); }
+  const total = c.words.length;
+  let k = 0;
+  timer = setInterval(() => {
+    if (k < total) c.words[k].classList.add('said');
+    k++;
+    const lit = Math.round((k / total) * c.barEls.length);
+    for (let j = 0; j < lit && j < c.barEls.length; j++) c.barEls[j].classList.add('on');
+    if (k >= total) { stop(true); next(); }
+  }, 140);
+}
+
+function next() {
+  if (!queue.length) return;
+  const c = queue.shift();
+  c.card.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
+  setTimeout(() => play(c), reduced ? 0 : 450);
+}
+
+cards.forEach(c => c.btn.addEventListener('click', () => {
+  queue = [];
+  if (active === c) { stop(true); return; }
+  play(c);
+}));
+
+document.querySelector('.play-all').addEventListener('click', () => {
+  queue = cards.slice();
+  next();
+});
+</script>
+</body>
+</html>
