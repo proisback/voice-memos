@@ -42,7 +42,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .top { position: absolute; top: 0; left: 0; right: 0; z-index: 5; }
 .top .wrap { display: flex; justify-content: space-between; align-items: center; padding: 22px 0; }
 .top nav { display: flex; gap: 22px; }
-.top a { text-decoration: none; color: var(--muted); }
+.top a { text-decoration: none; color: var(--muted); display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
 .top a:hover { color: var(--ink); }
 .who { display: flex; align-items: center; gap: 10px; color: var(--ink) !important; }
 
@@ -90,7 +90,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .chapter.is-active .node { background: var(--ink); color: var(--paper); transform: scale(1.12); }
 .chapter.is-playing .node { background: var(--rec); border-color: var(--rec); color: #fff; animation: pulse 1.6s ease-in-out infinite; }
 .ch-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; color: var(--muted); }
-.chip { padding: 5px 10px; border-radius: 99px; border: 1px solid var(--line); font-size: 10.5px; }
+.chip { padding: 5px 10px; border-radius: 99px; border: 1px solid var(--line); font-size: 12px; }
 .chip.live { border-color: #86ad85; color: #3c673b; }
 .ch-text h3 { margin-top: 12px; font: 400 clamp(40px, 4.6vw, 64px)/1 var(--serif); letter-spacing: -.015em; color: var(--ink-2); transition: color .3s; }
 .chapter.is-active h3 { color: var(--ink); }
@@ -114,13 +114,13 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 /* Transcript */
 .transcript { margin-top: 28px; display: grid; gap: 18px; }
-.tl .mono { color: var(--muted); font-size: 11px; display: block; margin-bottom: 6px; }
+.tl .mono { color: var(--muted); font-size: 12px; display: block; margin-bottom: 6px; }
 .tl p { font: 400 15.5px/1.65 var(--mono); color: var(--ink); }
 .tl.result p { font-weight: 500; }
 .is-tracking .tl .w { opacity: .3; transition: opacity .2s; }
 .is-tracking .tl .w.said { opacity: 1; }
 .stayed { margin-top: 26px; padding: 4px 0 4px 20px; border-left: 2px solid var(--rec); }
-.stayed .mono { color: var(--rec-ink); font-size: 11px; display: block; margin-bottom: 8px; }
+.stayed .mono { color: var(--rec-ink); font-size: 12px; display: block; margin-bottom: 8px; }
 .stayed .mono em { font-style: normal; color: var(--muted); letter-spacing: .08em; }
 .stayed .mono em::before { content: ' · '; }
 .is-tracking .stayed.tracked .w { opacity: .3; transition: opacity .2s; }
@@ -128,7 +128,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .stayed p { font: italic 400 22px/1.4 var(--serif); color: var(--ink-2); max-width: 32em; }
 @media (max-width: 640px) { .stayed p { font-size: 20px; } .stayed .mono em { display: block; margin-top: 4px; } .stayed .mono em::before { content: none; } }
 .links { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 8px; }
-.links a { font: 500 13px/1 var(--mono); text-decoration: none; padding: 12px 16px; border-radius: 99px; border: 1px solid var(--ink); transition: background .2s, color .2s; }
+.links a { display: inline-flex; align-items: center; min-height: 44px; font: 500 13px/1 var(--mono); text-decoration: none; padding: 12px 16px; border-radius: 99px; border: 1px solid var(--ink); transition: background .2s, color .2s; }
 .links a:hover { background: var(--ink); color: var(--paper); }
 
 /* Visuals */
@@ -186,7 +186,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .bar .l { color: #d8cfbf; }
 .badge { width: 128px; height: 128px; flex: none; border-radius: 50%; border: 1.5px dashed var(--rec); display: grid; place-items: center; text-align: center; }
 .badge b { display: block; font: 400 42px/1 var(--serif); color: var(--rec); }
-.badge span { font: 500 9.5px/1 var(--mono); letter-spacing: .14em; color: #d8cfbf; }
+.badge span { font: 500 12px/1 var(--mono); letter-spacing: .1em; color: #d8cfbf; }
 .c-rank p { font: italic 400 22px/1.3 var(--serif); color: #d8cfbf; }
 .evidence { margin-top: 56px; }
 .ev-row { margin-top: 14px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
@@ -194,6 +194,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .ev-row a:hover { transform: translateY(-3px); border-color: var(--rec); }
 .ev-row img { display: block; width: 100%; height: auto; aspect-ratio: 1000 / 680; object-fit: cover; }
 @media (max-width: 1000px) { .ev-row { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 640px) { .ev-row { grid-template-columns: repeat(2, 1fr); } }
 .flow-close { margin-top: 70px; font: 400 clamp(30px, 4vw, 52px)/1.12 var(--serif); max-width: 20em; }
 .flow-close em { color: var(--rec); }
 
@@ -222,7 +223,7 @@ footer { padding: 24px 0 120px; color: var(--muted); font: 400 12.5px/1.7 var(--
 .mini .meta { color: #b6ab98; font-size: 10.5px; margin-bottom: 5px; }
 .mini .prog { margin-top: 8px; height: 3px; border-radius: 3px; background: #3b3731; overflow: hidden; }
 .mini .prog b { display: block; height: 100%; width: 0; background: var(--rec); }
-.mini .jump { font: 500 12px/1 var(--mono); padding: 12px 14px; border-radius: 99px; border: 1px solid #5a544b; white-space: nowrap; }
+.mini .jump { min-height: 44px; font: 500 12px/1 var(--mono); padding: 12px 14px; border-radius: 99px; border: 1px solid #5a544b; white-space: nowrap; }
 .mini .jump:hover { border-color: var(--paper); }
 
 @media (max-width: 1000px) {
@@ -232,8 +233,10 @@ footer { padding: 24px 0 120px; color: var(--muted); font: 400 12.5px/1.7 var(--
   .typo .ghost { font-size: 170px; }
   .stats { grid-template-columns: repeat(6, 1fr); }
   .c-streak, .c-fix, .c-where, .c-rank { grid-column: span 6; grid-row: auto; }
-  .closing .grid { grid-template-columns: 1fr; gap: 40px; }
-  .portrait { width: 220px; }
+  .closing .grid { grid-template-columns: 1fr; gap: 40px; text-align: center; justify-items: center; }
+  .portrait { width: 220px; margin: 0 auto; }
+  .closing .body { margin-left: auto; margin-right: auto; }
+  .closing .cta { justify-content: center; }
 }
 @media (max-width: 640px) {
   body { font-size: 16px; }
