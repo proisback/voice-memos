@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Prateek Mehta · Nine Voice Memos</title>
-<meta name="description" content="Nine products built in 2026. The problems I found, the decisions I made, and what happened when I shipped. Press play.">
+<meta name="description" content="Nine products. Nine decisions. A year of finding the real problem, building, and learning from what shipped.">
 <meta property="og:title" content="Prateek Mehta · Nine Voice Memos">
-<meta property="og:description" content="Nine products. One year. A lot of thinking out loud.">
+<meta property="og:description" content="Nine products. Nine decisions. A year of finding the real problem, building, and learning from what shipped.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='%23e8432e'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -68,6 +68,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .btn:not(.primary):hover { background: var(--ink); color: var(--paper); }
 .btn svg { width: 14px; height: 14px; fill: currentColor; }
 .disclose { margin-top: 18px; color: var(--muted); font: 400 13px/1.5 var(--mono); }
+.hero-meta { margin-top: 16px; color: var(--muted); font: 400 13px/1.5 var(--mono); }
+.hero-meta a { text-underline-offset: 3px; }
+.memos-intro { max-width: 40em; margin: 24px 0 4px; color: var(--ink-2); font-size: 17px; }
 .hero-wave { margin-top: 56px; height: 90px; display: flex; align-items: center; gap: 3px; transform-origin: left center; }
 .hero-wave i { flex: 1; height: 100%; border-radius: 3px; background: var(--ink); transform: scaleY(var(--h)); opacity: .85; }
 .hero-wave i:nth-child(7n) { background: var(--rec); }
@@ -93,8 +96,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .ch-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; color: var(--muted); }
 .chip { padding: 5px 10px; border-radius: 99px; border: 1px solid var(--line); font-size: 12px; }
 .chip.live { border-color: #86ad85; color: #3c673b; }
-.ch-text h3 { margin-top: 12px; font: 400 clamp(40px, 4.6vw, 64px)/1 var(--serif); letter-spacing: -.015em; color: var(--ink-2); transition: color .3s; }
+.ch-text h3 { margin-top: 12px; font: 400 clamp(30px, 4.6vw, 48px)/1 var(--serif); letter-spacing: -.015em; color: var(--ink-2); transition: color .3s; }
 .chapter.is-active h3 { color: var(--ink); }
+.hook { margin-top: 14px; max-width: 29em; font: italic 400 24px/1.25 var(--serif); color: var(--ink-2); }
 .kind { margin-top: 8px; color: var(--muted); font-size: 15.5px; }
 
 /* Player */
@@ -265,7 +269,10 @@ footer { padding: 24px 0 120px; color: var(--muted); font: 400 12.5px/1.7 var(--
 @media (max-width: 640px) {
   body { font-size: 16px; }
   .top nav { display: none; }
-  .hero { padding-top: 90px; }
+  .hero { padding-top: 90px; min-height: auto; }
+  .hero h1 { font-size: clamp(32px, 9vw, 38px); line-height: 1.05; }
+  .hero .lede { font-size: 17px; }
+  .hero-meta { font-size: 13px; }
   .hero-wave { height: 60px; margin-top: 40px; }
   .timeline { padding-left: 44px; }
   .spine { left: 14px; }
@@ -275,10 +282,13 @@ footer { padding: 24px 0 120px; color: var(--muted); font: 400 12.5px/1.7 var(--
   .player { grid-template-columns: 52px 1fr; padding: 12px; gap: 12px 14px; }
   .pbtn { width: 52px; height: 52px; }
   .time { grid-column: 2; margin-top: -8px; }
-  .tl p { font-size: 14.5px; }
+  .tl p { font-size: 16px; }
+  .ch-text h3 { font-size: clamp(26px, 7vw, 30px); line-height: 1.08; }
+  .hook { font-size: 21px; }
   .typo .big { font-size: 84px; }
   .typo .ghost { font-size: 130px; top: 110px; }
   .hero-stat { grid-template-columns: 1fr; gap: 10px; }
+  .flow h2 { font-size: clamp(36px, 10vw, 46px); }
   .cell { padding: 20px; }
   .cell .n { font-size: 48px; }
   .c-rank { flex-direction: column; align-items: flex-start; }
@@ -308,22 +318,24 @@ footer { padding: 24px 0 120px; color: var(--muted); font: 400 12.5px/1.7 var(--
 
 <main id="top">
   <section class="hero wrap" aria-labelledby="hero-h">
-    <div class="rec-line mono"><span class="dot pulse" aria-hidden="true"></span><span>Recording</span><span class="clock" aria-hidden="true">00:00</span><span>· 2026</span></div>
-    <h1 id="hero-h"><span class="l">Nine products.</span><span class="l">One year.</span><span class="l"><em>A lot of thinking out loud.</em></span></h1>
-    <p class="lede">Eight years working on systems in banking and insurance. In 2026, I started building products. These are nine stories about the problems I found, the decisions I made, and what happened when I shipped.</p>
+    <div class="rec-line mono"><span class="dot pulse" aria-hidden="true"></span><span>Nine Voice Memos · 2026</span></div>
+    <h1 id="hero-h"><span class="l">I spent 8 years building systems for banks.</span><span class="l"><em>Then I started building products of my own.</em></span></h1>
+    <p class="lede">Nine products. One year. And a lot of assumptions I had to unlearn. Some started with a user interview. Some started with a problem I couldn't stop thinking about. Almost every project taught me the same thing: the first problem you notice is rarely the whole problem. These are nine stories about what I thought I should build, what I discovered, and what I shipped instead.</p>
     <div class="cta">
-      <button class="btn primary" type="button" data-playall data-track="hero-listen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>Listen to my year</button>
-      <a class="btn" href="#memos" data-track="hero-explore">Explore the projects</a>
+      <a class="btn primary" href="#memos" data-track="hero-explore">Explore the nine builds ↓</a>
+      <button class="btn" type="button" data-playall data-track="hero-listen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>Listen to my year</button>
     </div>
+    <p class="hero-meta">Prateek Mehta · Mumbai · <a href="https://proisback.github.io/my-portfolio/">Full career story</a></p>
     <p class="disclose">Narrated in my cloned voice, generated with Speechify. Nine memos, about 7.5 minutes.</p>
     <div class="hero-wave" aria-hidden="true"></div>
   </section>
 
   <section id="memos" class="wrap" aria-labelledby="memos-h">
     <div class="memos-head">
-      <h2 id="memos-h">February to <em>November</em></h2>
-      <div class="side"><span class="mono" style="color:var(--muted)">9 memos · press play on any</span><button class="btn primary" type="button" data-playall data-track="memos-play-all"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>Play all</button></div>
+      <h2 id="memos-h">Nine products. <em>Nine problems.</em></h2>
+      <div class="side"><span class="mono" style="color:var(--muted)">All memos · 9</span><button class="btn primary" type="button" data-playall data-track="memos-play-all"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>Play all</button></div>
     </div>
+    <p class="memos-intro">Research changed the direction. Product judgment shaped what made the cut. Then I built, shipped, and looked for evidence. Some were team projects; others I built solo. Each memo makes my role and the project's status clear.</p>
     <div class="timeline">
       <div class="spine" aria-hidden="true"><b></b></div>
       <div id="chapters"></div>
@@ -334,8 +346,8 @@ footer { padding: 24px 0 120px; color: var(--muted); font: 400 12.5px/1.7 var(--
   <section id="flow" class="flow" aria-labelledby="flow-h">
     <div class="wrap">
       <p class="mono lab"><span class="dot" aria-hidden="true"></span>Wispr Flow Insights · Snapshot captured 4 Nov 2026</p>
-      <h2 id="flow-h">I don't just use voice. <em>I work in it.</em></h2>
-      <p class="sub">Voice has become part of how I think, plan, build, write, and get work done. This portfolio is one more thing I made by starting with a conversation.</p>
+      <h2 id="flow-h">I didn't just build this portfolio for Wispr Flow. <em>I built it with Wispr Flow.</em></h2>
+      <p class="sub">Most of my work starts as a conversation. An idea becomes a thought. A thought becomes a product decision. A decision becomes something I can build, test, and ship. Voice isn't an occasional shortcut in my workflow. It's where a lot of my thinking begins.</p>
 
       <div class="hero-stat rv">
         <div class="num" data-count="69803">69,803</div>
@@ -384,7 +396,7 @@ footer { padding: 24px 0 120px; color: var(--muted); font: 400 12.5px/1.7 var(--
         </div>
       </div>
 
-      <p class="flow-close rv">69,803 words dictated. 36 days of showing up. <em>And nine products built along the way.</em></p>
+      <p class="flow-close rv">69,803 words dictated. 36 days of showing up. Nine products built along the way. That's not just a product I know how to use. <em>It's a product that's become part of how I work.</em></p>
     </div>
   </section>
 
@@ -392,13 +404,13 @@ footer { padding: 24px 0 120px; color: var(--muted); font: 400 12.5px/1.7 var(--
     <div class="grid">
       <div class="portrait rv"><img src="img/prateek.webp" width="520" height="520" alt="Illustrated portrait of Prateek Mehta waving" loading="lazy" decoding="async"></div>
       <div class="rv">
-        <p class="mono" style="color:var(--muted)">Memo 10 · Recording</p>
-        <h2 id="close-h">Memo 10 is <em>yours.</em></h2>
-        <p class="body">I like finding the point where a messy human problem becomes a clear product decision. I talk to users, challenge the first solution, build quickly, and look for the number that tells me whether it worked. If there's a problem worth solving, or a growth experiment worth running, I want to hear about it.</p>
+        <p class="mono" style="color:var(--muted)">The next memo</p>
+        <h2 id="close-h">Nine products were my first nine memos. <em>I'd like to make the next one with you.</em></h2>
+        <p class="body">I like problems that aren't immediately obvious. The kind where the first solution feels right, until you talk to a user and realise you've been solving the wrong thing. I enjoy getting close to those problems, finding the real constraint, making the product decision, building quickly, and figuring out whether it worked. Eight years in banking and insurance taught me to understand complex systems. Building these nine products taught me to question them. And using Wispr Flow has changed how I move from an unfinished thought to something real. If you're building something ambitious, I'd love to help figure out what comes next.</p>
         <div class="cta">
-          <a class="btn primary" href="https://proisback.github.io/my-portfolio/" target="_blank" rel="noopener" data-track="close-full-portfolio">Full portfolio</a>
+          <a class="btn primary" href="https://proisback.github.io/my-portfolio/" target="_blank" rel="noopener" data-track="close-full-portfolio">Explore my full portfolio</a>
           <a class="btn" href="mailto:prateek.milestoneindia@gmail.com" data-track="close-email">Email me</a>
-          <a class="btn" href="https://www.linkedin.com/in/prateek-mehta-xlri/" target="_blank" rel="noopener" data-track="close-linkedin">LinkedIn</a>
+          <a class="btn" href="https://www.linkedin.com/in/prateek-mehta-xlri/" target="_blank" rel="noopener" data-track="close-linkedin">Connect on LinkedIn</a>
         </div>
       </div>
     </div>
@@ -493,11 +505,23 @@ const MEMOS = [
     shot: 'img/boq-se-quote.webp', cap: 'Working concept · boq-se-quote.vercel.app',
     links: [['Case study', CS + 'work/boq-se-quote/'], ['Working concept', 'https://boq-se-quote.vercel.app/']] },
 ];
+const STORY = [
+  { hook: "The data existed. The person who needed it couldn't see it.", kind: 'Blinkit dark stores · Group project · Four-person PM squad', problem: "During the busiest hours, Blinkit store managers couldn't see what their pickers were doing. The problem wasn't missing data. It was missing visibility at the point of action.", did: 'Co-authored the PRD with a four-person PM squad. Analysed 392 reviews, studied 11 first-person accounts, and interviewed a store manager.', result: 'An estimated ₹3.16 Cr in annual margin loss per store was identified. We proposed a one-tap intervention to help managers act on operational bottlenecks.', learned: 'The franchise owner could already see live picker metrics. The person managing the floor couldn’t. That changed the question from “What should we build?” to “Who needs this information, and when can it still change the outcome?”', visual: {big:'₹3.16 Cr',lbl:'Estimated annual margin loss per store'} },
+  { hook: 'One founder had four years of CRM data. He was still losing deals.', kind: 'Intelligence layer for founder CRM · Group project', problem: 'More visibility wasn’t solving the problem. That conversation challenged our entire hypothesis. Early-stage founders don’t always have sales teams managing their pipelines. Important conversations get forgotten, and opportunities slip through.', did: 'Six founder interviews; research across 80+ sources on CRM adoption; co-authored the product requirements document.', result: 'We designed an intelligence layer that brings conversations together and surfaces the 3–5 deals worth acting on each day.', learned: 'We thought founders needed better visibility. They didn’t need another dashboard showing everything. They needed help deciding what deserved their attention today.', visual: {big:'3–5',lbl:'Priority deals surfaced each day'} },
+  { hook: 'What if getting rejected wasn’t the problem? Not knowing why was.', kind: 'Career navigation for aspiring PMs · Solo build', problem: 'Aspiring product managers often receive no useful feedback about their readiness. In our 38-person survey, 84% received no feedback or only vague feedback.', did: 'Surveyed 38 aspiring PMs, conducted six interviews, and identified the gap between perceived readiness and actual job requirements.', result: 'Built a three-stage AI-scored platform that lets users compare themselves against a real job description. It returns one of three assessments: Ready, Almost, or Not Yet. All seven Must-haves shipped.', learned: 'A score of 7.3 looks precise. But what is someone supposed to do with it? I wanted the product to give people a meaningful next step, not just another number. A useful assessment should tell you where you stand and what to do next.', visual: {big:'84%',lbl:'Received no feedback or only vague feedback in our 38-person survey'} },
+  { hook: 'I built a meal planner. Then realised planning was the problem.', kind: 'Suggestion-first meal planner for Indian families · Solo build', problem: 'In a joint family of six, “Aaj kya banayein?” can mean 1,095 meal decisions a year. My first solution was a blank weekly planning grid. It recreated the very problem I was trying to solve.', did: 'One user interview made me rethink the experience. Instead of asking people to plan every meal, what if the product simply suggested what to cook next? I built a suggestion-first meal planner for Indian families.', result: 'Shipped in four days, with $0 infrastructure costs and no prior coding background.', learned: 'Sometimes the best product experience isn’t giving people better tools to make decisions. It’s removing unnecessary decisions altogether.', visual: {big:'4 days',lbl:'From idea to shipped product'} },
+  { hook: 'I thought group trips needed better itineraries. They needed people to agree on dates.', kind: 'Group trip coordination · Solo build', problem: 'My research changed what I decided to build. Agreeing on dates came before itinerary planning.', did: 'Collected 132+ research data points: 27 interviews and 105 survey responses. Built the group trip coordination product solo in eight days.', result: 'Reached 91.7% link-based member activation in a 24-member live cohort test.', learned: 'I initially assumed itinerary building was the biggest problem. It wasn’t. I cut four feature categories and focused on the real bottleneck: getting everyone to lock dates. A product doesn’t become better by solving more problems. Sometimes it becomes better by removing everything except the right one.', visual: {big:'91.7%',lbl:'Link-based member activation in a 24-member live cohort test'} },
+  { hook: 'I deliberately made parts of this product slower. Because sometimes speed is the enemy of trust.', kind: 'Women-only friendship app for Bangalore · Founding PM · Team of six', problem: 'Finding genuine friendships in a new city can be surprisingly difficult, especially when safety and trust matter.', did: 'Led product discovery, wrote the PRD, designed every page, and ran QA with a six-person Buildathon team.', result: 'Took galpals from a blank page to a Product Hunt launch in four days.', learned: 'We chose manual verification and deliberate onboarding steps. Automating verification might have made onboarding faster, but it could have weakened the safety promise. The best product decision isn’t always the one that removes the most friction. It’s the one that removes the right friction.', visual: {big:'4 days',lbl:'From blank page to Product Hunt launch'} },
+  { hook: 'Reading something isn’t the same as learning it.', kind: 'A daily reading practice in four languages · Solo build', problem: 'We scroll, consume, and forget. I wanted to help people take an idea beyond the screen.', did: 'Built a daily reading practice in four languages. Each idea includes what it means, why it matters, and one small action to try.', result: 'Launched in September with 669 hand-picked ideas.', learned: 'Most content products optimise for consumption. I wanted a signal for action. That’s why every idea ends with an “I did it” tap: a way to show that an idea moved beyond reading. I wasn’t trying to help people consume more. I wanted to help them do something with what they consumed.', visual: {big:'669',lbl:'Hand-picked ideas · Four languages'} },
+  { hook: 'A gym owner doesn’t need another report. They need to know who to collect from today.', kind: 'Phone-first operating system for small gyms · Solo build', problem: 'Who owes money? Whose membership is expiring? Who hasn’t shown up in weeks? A notebook can’t answer those questions quickly.', did: 'Built a phone-first operating system for small gyms, solo in one week. It brings together membership dues and part-payments, renewals, QR check-ins, and one-tap WhatsApp reminders.', result: 'Designed around the owner’s next decision, not a collection of reports. The dashboard surfaces actions such as “Collect ₹2,500” and “Remind on WhatsApp.”', learned: 'A report asks someone to interpret information before acting. Putting the action directly on the screen removes that extra step. Every screen had to answer one question: does this help the owner collect money or retain a member?', visual: {big:'1 week',lbl:'Solo build · Live demo'} },
+  { name: 'BOQ से Quote तक', hook: 'The first quote shouldn’t close the sale. It should earn the showroom visit.', kind: 'Showroom quoting for tiles and sanitaryware · Solo build', problem: 'Customers send the same Bill of Quantities to multiple showrooms. The showroom that responds with useful options and price clarity first has a better chance of earning the next conversation.', did: 'My first idea was “BOQ in. Quote out.” It sounded simple, but missed something important: people don’t usually make their final tile and sanitaryware decisions remotely. They want to see and compare products in person.', result: 'Built a phone-first quoting experience with AI-assisted BOQ parsing, catalogue-only product matching, Good / Better / Best options, WhatsApp sharing, and showroom visit booking.', learned: 'I changed the job of the first quote. It shouldn’t try to complete the sale. It should help the customer understand their options and give them a reason to visit. The metric I’d use to prove it: BOQs that turn into showroom visits. The quote is the bridge. The showroom is where the decision happens.' }
+];
+STORY.forEach((s, i) => Object.assign(MEMOS[i], s));
 // Written by tools/process_audio.py. Recording length per memo (seconds), and per spoken section: [words start, section ends].
-// Four sections means the recording includes "What stayed with me". DUR is also corrected from the file at load time.
+// Four transcript sections are highlighted approximately against the revised recording.
 // Line boundaries come from a transcription of the recordings; words inside a line are spread evenly, so highlighting is approximate.
-let DUR = [44.88, 44.98, 54.14, 48.76, 50.94, 41.46, 45.24, 55.36, 62.52];
-const TAPES = [[[3.65,7.73],[8.81,20.25],[22.05,30.53],[31.95,44.45]],[[2.39,12.57],[13.87,20.43],[22.01,29.41],[30.47,44.55]],[[3.79,14.57],[16.11,25.17],[26.59,36.23],[37.75,53.71]],[[4.05,12.79],[14.13,24.01],[25.45,31.77],[33.33,48.31]],[[3.87,11.73],[12.91,24.11],[25.23,33.51],[34.93,50.51]],[[2.77,10.17],[11.45,19.09],[20.39,24.43],[25.89,41.03]],[[2.73,8.95],[10.47,19.23],[20.45,29.11],[31.53,44.79]],[[2.79,10.01],[11.37,21.23],[22.71,35.03],[35.97,54.93]],[[4.05,14.17],[15.27,27.61],[29.13,42.35],[43.89,62.09]]];
+let DUR = [51.44, 45.36, 54.24, 45.72, 48.27, 41.5, 38.52, 51.1, 64.47];
+const TAPES = [[[0.0,18.47],[18.47,29.02],[29.02,36.49],[36.49,51.44]],[[0.0,17.41],[17.41,26.57],[26.57,34.82],[34.82,45.36]],[[0.0,12.2],[12.2,22.6],[22.6,37.97],[37.97,54.24]],[[0.0,15.66],[15.66,30.48],[30.48,38.1],[38.1,45.72]],[[0.0,10.93],[10.93,25.05],[25.05,30.97],[30.97,48.27]],[[0.0,11.35],[11.35,19.97],[19.97,25.84],[25.84,41.5]],[[0.0,6.42],[6.42,15.34],[15.34,21.4],[21.4,38.52]],[[0.0,13.23],[13.23,26.1],[26.1,38.97],[38.97,51.1]],[[0.0,13.39],[13.39,28.54],[28.54,48.62],[48.62,64.47]]];
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $ = (s, r = document) => r.querySelector(s);
@@ -531,8 +555,7 @@ document.querySelectorAll('.hero h1 .l').forEach(l => {
 const caret = el('span', 'caret'); caret.setAttribute('aria-hidden', 'true');
 if (reduced) hWords.forEach(w => w.classList.add('on'));
 else hWords.forEach((w, k) => setTimeout(() => { w.classList.add('on'); w.append(caret); }, 120 + k * 95));
-const clock = $('.rec-line .clock'), t0 = performance.now();
-setInterval(() => { const s = Math.floor((performance.now() - t0) / 1000); clock.textContent = pad(Math.floor(s / 60)) + ':' + pad(s % 60); }, 1000);
+const clock = $('.rec-line .clock');
 
 /* ---------- Chapters ---------- */
 const root = $('#chapters');
@@ -547,6 +570,7 @@ const chapters = MEMOS.map((m, i) => {
   const meta = el('div', 'ch-meta mono'); meta.append('Memo ' + pad(i + 1) + ' · ' + m.month + ' 2026');
   meta.append(el('span', 'chip' + (/^(Live|Launched)$/.test(m.status) ? ' live' : ''), m.status));
   const h3 = el('h3', null, m.name); h3.id = ch.id + '-t';
+  const hook = el('p', 'hook', m.hook);
 
   const player = el('div', 'player');
   const pbtn = el('button', 'pbtn'); pbtn.type = 'button'; pbtn.innerHTML = PLAY; pbtn.setAttribute('aria-label', 'Play memo ' + pad(i + 1) + ': ' + m.name);
@@ -560,7 +584,7 @@ const chapters = MEMOS.map((m, i) => {
   player.append(pbtn, scrub, time);
 
   const tr = el('div', 'transcript');
-  const lines = [['The problem', m.problem], ['What I did', m.did], ['What happened', m.result]].map(([label, body], j) => {
+  const lines = [['The problem', m.problem], ['What I investigated / built', m.did], ['What happened', m.result]].map(([label, body], j) => {
     const d = el('div', 'tl' + (j === 2 ? ' result' : ''));
     d.append(el('span', 'mono', label));
     const p = el('p'), words = [];
@@ -570,17 +594,14 @@ const chapters = MEMOS.map((m, i) => {
   });
   const links = el('div', 'links');
   m.links.forEach(([label, href]) => { const a = el('a', null, label + ' ↗'); a.href = href; a.target = '_blank'; a.rel = 'noopener'; a.dataset.track = 'memo-' + pad(i + 1) + '-' + label.toLowerCase().replace(/\s+/g, '-'); links.append(a); });
-  // The reflection. If this memo's recording includes it (a fourth timed line), its words follow the audio;
-  // if not, it is labelled as written later.
   const recorded = TAPES[i].length === 4;
-  const stayed = el('div', 'stayed rv' + (recorded ? ' tracked' : ''));
-  const lab = el('span', 'mono', 'What stayed with me');
-  if (!recorded) lab.append(el('em', null, 'written later, not in the recording'));
+  const stayed = el('div', 'stayed rv tracked');
+  const lab = el('span', 'mono', 'The decision that mattered');
   const sp = el('p'), sWords = [];
   m.learned.split(' ').forEach((w, k, a) => { const s = el('span', 'w', w); sp.append(s); if (k < a.length - 1) sp.append(' '); sWords.push(s); });
   if (recorded) lines.push(sWords);
   stayed.append(lab, sp);
-  text.append(meta, h3, el('div', 'kind', m.kind), player, tr, stayed, links);
+  text.append(meta, h3, hook, el('div', 'kind', m.kind), player, tr, stayed, links);
 
   const vis = el('div', 'ch-visual');
   if (m.shot) {
